@@ -72,10 +72,7 @@ export function Hero() {
               <p className="text-sm font-medium text-white">
                 Sabores e preços na seção Cardápio abaixo.
               </p>
-              <p className="mt-1 text-xs text-zinc-300">
-                Foto ilustrativa — confirme ingredientes e disponibilidade no
-                WhatsApp.
-              </p>
+             
             </div>
           </div>
         </div>
