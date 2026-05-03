@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-script: 'Dancing Script', cursive;
+  --font-menu-serif:
+    'Source Serif 4', ui-serif, Georgia, 'Times New Roman', serif;
+
+  --color-brand-950: oklch(0.145 0.02 30);
+  --color-brand-900: oklch(0.2 0.03 30);
+  --color-brand-800: oklch(0.26 0.035 35);
+  --color-accent-400: oklch(0.83 0.16 76);
+  --color-accent-500: oklch(0.77 0.18 54);
+}
+
+html {
+  scroll-behavior: smooth;
+}
