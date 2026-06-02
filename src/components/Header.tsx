@@ -10,7 +10,7 @@ export function Header() {
             {siteContent.brandName}
           </span>
           <span className="text-xs font-medium uppercase tracking-[0.2em] text-zinc-500">
-            Pizza & delivery
+            Pizzaria em Santana do Jacaré
           </span>
         </a>
         <div className="flex items-center gap-4 sm:gap-6">
@@ -20,10 +20,13 @@ export function Header() {
           >
             Cardápio
           </a>
-          <WhatsAppButton
-            variant="solidWhatsApp"
-            className="hidden sm:inline-flex"
+          <a
+            href="#faq-local"
+            className="hidden text-sm font-medium text-zinc-300 transition hover:text-white md:inline-flex"
           >
+            FAQ
+          </a>
+          <WhatsAppButton variant="solidWhatsApp" className="hidden sm:inline-flex">
             Falar no WhatsApp
           </WhatsAppButton>
         </div>

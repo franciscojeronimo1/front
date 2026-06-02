@@ -1,8 +1,4 @@
-import {
-  WHATSAPP_DISPLAY,
-  siteContent,
-  whatsappHref,
-} from '../content/siteContent'
+import { WHATSAPP_DISPLAY, siteContent, whatsappHref } from '../content/siteContent'
 import { WhatsAppButton } from './WhatsAppButton'
 
 export function Footer() {
@@ -36,7 +32,7 @@ export function Footer() {
         </div>
         <div className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-8">
           <p className="text-lg font-medium text-white">
-            Pronto para matar a vontade de pizza boa?
+            Sua pizzaria em Santana do Jacaré está aqui
           </p>
           <p className="text-sm text-zinc-400">
             Escolha sabor e tamanho no cardápio e envie seu pedido pelo WhatsApp.
@@ -45,26 +41,17 @@ export function Footer() {
             Falar agora com a Claudia Delivery
           </WhatsAppButton>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-zinc-500">
-            {siteContent.footer.instagramHref === 'https://www.instagram.com/claudiaclementinodasilva/' ? (
-              <a
-                href={siteContent.footer.instagramHref}
-                className="text-zinc-300 transition hover:text-white"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {siteContent.footer.instagramLabel}
-              </a>
-            ) : (
-              <a
-                href={siteContent.footer.instagramHref}
-                className="text-zinc-300 transition hover:text-white"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {siteContent.footer.instagramLabel}
-              </a>
-            )}
-            <span>© {new Date().getFullYear()} {siteContent.brandName}</span>
+            <a
+              href={siteContent.footer.instagramHref}
+              className="text-zinc-300 transition hover:text-white"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {siteContent.footer.instagramLabel}
+            </a>
+            <span>
+              © {new Date().getFullYear()} {siteContent.brandName}
+            </span>
           </div>
         </div>
       </div>

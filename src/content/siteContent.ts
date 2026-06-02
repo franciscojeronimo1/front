@@ -1,3 +1,9 @@
+/** Configuração geral de SEO/local. */
+export const SEO_CITY = 'Santana do Jacaré'
+export const SEO_STATE = 'MG'
+export const SEO_COUNTRY = 'BR'
+export const SEO_SITE_URL = 'https://pizzariadeliverysj.com'
+
 /** Link internacional (wa.me). */
 export const WHATSAPP_PHONE_E164 = '5535999865637'
 
@@ -7,7 +13,7 @@ export const WHATSAPP_DISPLAY = '35 99865637'
 export const whatsappPrefillMessages = {
   pedido:
     'Olá! Vim pelo site da Claudia Delivery e quero fazer um pedido.',
-  cardápio:
+  cardapio:
     'Olá! Vim pelo site e gostaria de confirmar sabores e tamanhos disponíveis.',
 } as const
 
@@ -37,9 +43,9 @@ export const imagery = {
 export const siteContent = {
   brandName: 'Claudia Delivery',
   hero: {
-    title: 'Pizza quentinha na sua porta',
+    title: 'Pizzaria em Santana do Jacaré com entrega rápida',
     subtitle:
-      'Cardápio completo abaixo — escolha o sabor, o tamanho e finalize seu pedido pelo WhatsApp.',
+      'Cardápio completo abaixo: escolha o sabor, o tamanho e finalize seu pedido pelo WhatsApp.',
     ctaPrimary: 'Pedir no WhatsApp',
     ctaSecondary: 'Ver cardápio',
   },
