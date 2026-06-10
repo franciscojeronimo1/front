@@ -61,10 +61,52 @@ export const siteContent = {
   hero: {
     title: 'Pizzaria em Santana do Jacaré com entrega rápida',
     subtitle:
-      'Cardápio completo abaixo: escolha o sabor, o tamanho e finalize seu pedido pelo WhatsApp.',
+      'Escolha entre dezenas de sabores, monte seu pedido em segundos e finalize pelo WhatsApp.',
     ctaPrimary: 'Pedir no WhatsApp',
     ctaSecondary: 'Ver cardápio',
   },
+  trustHighlights: [
+    {
+      icon: 'delivery' as const,
+      title: 'Delivery local',
+      description: 'Entrega em Santana do Jacaré e região, com confirmação rápida no WhatsApp.',
+    },
+    {
+      icon: 'click' as const,
+      title: 'Pedido em 1 clique',
+      description: 'Cada sabor tem botão direto — sem app, sem cadastro, sem complicação.',
+    },
+    {
+      icon: 'flavors' as const,
+      title: '+20 sabores',
+      description: 'Tradicional, bacon, queijos, carnes e opções vegetarianas no cardápio.',
+    },
+    {
+      icon: 'hours' as const,
+      title: 'Todos os dias',
+      description: 'Funcionamento das 18:00 às 22:00, de segunda a domingo.',
+    },
+  ],
+  orderSteps: [
+    {
+      title: 'Escolha o sabor',
+      description: 'Navegue pelo cardápio e veja ingredientes, tamanhos e valores.',
+    },
+    {
+      title: 'Toque em Pedir',
+      description: 'O WhatsApp abre com a pizza já selecionada — é só confirmar o tamanho.',
+    },
+    {
+      title: 'Receba em casa',
+      description: 'Combine entrega e pagamento direto com a Claudia Delivery.',
+    },
+  ],
+  featuredPizzas: [
+    { sectionId: 'bacon-alho', itemName: 'PORTUGUESA COMPLETA', tag: 'Clássica da casa' },
+    { sectionId: 'bacon-alho', itemName: 'FRANGOLINO', tag: 'Mais pedida' },
+    { sectionId: 'queijos', itemName: '4 QUEIJOS', tag: 'Cremosa' },
+    { sectionId: 'carnes', itemName: 'COSTELA', tag: 'Premium' },
+  ],
   cardapioNota:
     'Valores conforme cardápio. Em caso de dúvida ou alteração, confirme diretamente no WhatsApp.',
   footer: {

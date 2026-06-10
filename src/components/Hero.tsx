@@ -1,4 +1,5 @@
 import { imagery, siteContent } from '../content/siteContent'
+import { OpenStatusBadge } from './OpenStatusBadge'
 import { WhatsAppButton } from './WhatsAppButton'
 
 export function Hero() {
@@ -13,9 +14,12 @@ export function Hero() {
 
       <div className="relative mx-auto grid max-w-6xl gap-14 px-5 py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:py-28">
         <div className="space-y-8">
-          <p className="inline-flex rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-zinc-300">
-            Claudia Delivery
-          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="inline-flex rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-zinc-300">
+              Claudia Delivery
+            </p>
+            <OpenStatusBadge />
+          </div>
           <div className="space-y-5">
             <h1 className="text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
               {siteContent.hero.title}
@@ -35,8 +39,8 @@ export function Hero() {
           </div>
           <dl className="grid max-w-lg grid-cols-3 gap-4 text-sm text-zinc-400 sm:gap-6">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <dt className="text-xs uppercase tracking-wider text-zinc-500">Cidade</dt>
-              <dd className="mt-1 font-semibold text-white">Santana do Jacaré</dd>
+              <dt className="text-xs uppercase tracking-wider text-zinc-500">Sabores</dt>
+              <dd className="mt-1 font-semibold text-white">+20 opções</dd>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <dt className="text-xs uppercase tracking-wider text-zinc-500">Tamanhos</dt>
@@ -44,7 +48,7 @@ export function Hero() {
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <dt className="text-xs uppercase tracking-wider text-zinc-500">Pedido</dt>
-              <dd className="mt-1 font-semibold text-white">WhatsApp</dd>
+              <dd className="mt-1 font-semibold text-white">1 clique</dd>
             </div>
           </dl>
         </div>
