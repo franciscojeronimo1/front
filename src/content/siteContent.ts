@@ -5,11 +5,20 @@ export const SEO_COUNTRY = 'BR'
 export const SEO_SITE_URL = 'https://pizzariadeliverysj.com'
 
 /** Imagem para compartilhamento (Open Graph / Twitter). Proporção 1.91:1. */
-export const SEO_OG_IMAGE =
-  'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&h=630&q=80'
+export const SEO_OG_IMAGE = `${SEO_SITE_URL}/og-image.jpg`
 
 export const SEO_OG_IMAGE_ALT =
-  'Pizza artesanal da Claudia Delivery em Santana do Jacaré, MG'
+  'Claudia Delivery — pizzaria em Santana do Jacaré, MG'
+
+/** Localização para SEO local (sem endereço físico de balcão). */
+export const SEO_ADDRESS = {
+  locality: SEO_CITY,
+  region: SEO_STATE,
+  country: SEO_COUNTRY,
+  /** Texto exibido no rodapé e em blocos de contato. */
+  display: `${SEO_CITY}, ${SEO_STATE}`,
+  serviceNote: 'Atendimento por delivery em Santana do Jacaré e região.',
+} as const
 
 /** Link internacional (wa.me). */
 export const WHATSAPP_PHONE_E164 = '5535999865637'
@@ -60,7 +69,8 @@ export const siteContent = {
     'Valores conforme cardápio. Em caso de dúvida ou alteração, confirme diretamente no WhatsApp.',
   footer: {
     hours: 'Horário: 18:00 às 22:00.',
-    area: 'Atendimento em Santana do Jacaré.',
+    area: SEO_ADDRESS.serviceNote,
+    locationLabel: SEO_ADDRESS.display,
     instagramLabel: 'Instagram da Claudia Delivery',
     instagramHref: 'https://www.instagram.com/claudiaclementinodasilva/',
   },

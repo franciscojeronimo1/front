@@ -12,6 +12,10 @@ export function Footer() {
           <p className="max-w-xl text-lg text-zinc-400">{siteContent.footer.area}</p>
           <dl className="space-y-2 text-sm text-zinc-400">
             <div>
+              <dt className="font-semibold text-zinc-300">Localização</dt>
+              <dd>{siteContent.footer.locationLabel}</dd>
+            </div>
+            <div>
               <dt className="font-semibold text-zinc-300">Horário</dt>
               <dd>{siteContent.footer.hours}</dd>
             </div>
