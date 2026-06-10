@@ -5,7 +5,8 @@ import {
   cardapioSecoes,
   formatPrecoBRL,
 } from '../content/cardapio'
-import { siteContent, whatsappHrefPedidoPizza } from '../content/siteContent'
+import { siteContent } from '../content/siteContent'
+import { OrderPizzaButton } from './OrderPizzaButton'
 
 function minPrice(prices: SizePrices): number {
   return Math.min(...prices)
@@ -49,7 +50,7 @@ export function FeaturedPizzas() {
               Sabores que mais saem
             </h2>
             <p className="text-lg text-zinc-400">
-              Os preferidos da casa — toque em pedir e envie direto no WhatsApp.
+              Os preferidos da casa — monte inteira ou meia a meia e adicione ao pedido.
             </p>
           </div>
           <a
@@ -94,14 +95,16 @@ export function FeaturedPizzas() {
                     <p className="text-sm font-semibold text-accent-400">{price}</p>
                   ) : null}
 
-                  <a
-                    href={whatsappHrefPedidoPizza(item.name, secao.subtitulo)}
-                    target="_blank"
-                    rel="noreferrer"
+                  <OrderPizzaButton
+                    pizza={{
+                      sectionId: secao.id,
+                      sectionLabel: secao.subtitulo,
+                      itemName: item.name,
+                    }}
                     className="inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition group-hover:brightness-110 hover:bg-[#20bd5a]"
                   >
-                    Pedir no WhatsApp
-                  </a>
+                    Pedir
+                  </OrderPizzaButton>
                 </div>
               </li>
             )

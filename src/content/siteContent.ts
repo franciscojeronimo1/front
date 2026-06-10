@@ -42,14 +42,6 @@ export function whatsappHref(
   return `https://wa.me/${WHATSAPP_PHONE_E164}?${params}`
 }
 
-export function whatsappHrefPedidoPizza(
-  nomePizza: string,
-  categoriaLabel: string
-): string {
-  const text = `Olá! Quero pedir a pizza *${nomePizza}* (${categoriaLabel}).`
-  return `https://wa.me/${WHATSAPP_PHONE_E164}?${new URLSearchParams({ text })}`
-}
-
 /** Imagem ilustrativa do hero (Unsplash — termos da plataforma). */
 export const imagery = {
   hero:
@@ -74,7 +66,7 @@ export const siteContent = {
     {
       icon: 'click' as const,
       title: 'Pedido em 1 clique',
-      description: 'Cada sabor tem botão direto — sem app, sem cadastro, sem complicação.',
+      description: 'Monte inteira ou meia a meia, adicione várias pizzas e envie tudo no WhatsApp.',
     },
     {
       icon: 'flavors' as const,
@@ -89,16 +81,16 @@ export const siteContent = {
   ],
   orderSteps: [
     {
-      title: 'Escolha o sabor',
-      description: 'Navegue pelo cardápio e veja ingredientes, tamanhos e valores.',
+      title: 'Monte cada pizza',
+      description: 'Escolha inteira ou meia a meia, o tamanho e adicione quantas pizzas quiser.',
     },
     {
-      title: 'Toque em Pedir',
-      description: 'O WhatsApp abre com a pizza já selecionada — é só confirmar o tamanho.',
+      title: 'Revise o pedido',
+      description: 'Veja o total estimado na barra inferior antes de enviar.',
     },
     {
-      title: 'Receba em casa',
-      description: 'Combine entrega e pagamento direto com a Claudia Delivery.',
+      title: 'Envie no WhatsApp',
+      description: 'Confirme endereço e pagamento direto com a Claudia Delivery.',
     },
   ],
   featuredPizzas: [
@@ -108,7 +100,7 @@ export const siteContent = {
     { sectionId: 'carnes', itemName: 'COSTELA', tag: 'Premium' },
   ],
   cardapioNota:
-    'Valores conforme cardápio. Em caso de dúvida ou alteração, confirme diretamente no WhatsApp.',
+    'Meia a meia em Média, Grande e Família (valor do sabor mais caro). Pode misturar sabores de qualquer seção.',
   footer: {
     hours: 'Horário: 18:00 às 22:00.',
     area: SEO_ADDRESS.serviceNote,

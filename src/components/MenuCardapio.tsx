@@ -5,7 +5,8 @@ import {
   legendasTamanhos,
   cardapioSecoes,
 } from '../content/cardapio'
-import { siteContent, whatsappHrefPedidoPizza } from '../content/siteContent'
+import { siteContent } from '../content/siteContent'
+import { OrderPizzaButton } from './OrderPizzaButton'
 import { WhatsAppButton } from './WhatsAppButton'
 
 function PrecoPorItem({ item }: { item: CardapioItem }) {
@@ -33,10 +34,12 @@ function FaixaDaSecao({ secao }: { secao: CardapioSecao }) {
 
 function PizzaRow({
   item,
+  sectionId,
   subtitulo,
   mostrarFaixaPorItem,
 }: {
   item: CardapioItem
+  sectionId: string
   subtitulo: string
   mostrarFaixaPorItem: boolean
 }) {
@@ -57,14 +60,13 @@ function PizzaRow({
           ) : null}
           {mostrarFaixaPorItem ? <PrecoPorItem item={item} /> : null}
         </div>
-        <a
-          href={whatsappHrefPedidoPizza(item.name, subtitulo)}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[#9f1239]/35 bg-[#9f1239]/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#9f1239] transition hover:bg-[#9f1239]/10 hover:text-[#7f122d]"
-        >
-          Pedir
-        </a>
+        <OrderPizzaButton
+          pizza={{
+            sectionId,
+            sectionLabel: subtitulo,
+            itemName: item.name,
+          }}
+        />
       </div>
     </li>
   )
@@ -110,6 +112,7 @@ export function MenuCardapio() {
                   <PizzaRow
                     key={`${secao.id}-${item.name}`}
                     item={item}
+                    sectionId={secao.id}
                     subtitulo={secao.subtitulo}
                     mostrarFaixaPorItem={secao.id === 'queijos'}
                   />

@@ -6,8 +6,8 @@ const faqs = [
     a: `Atendemos ${SEO_CITY} e regiões próximas. Confirme seu bairro no WhatsApp para validar taxa e tempo de entrega.`,
   },
   {
-    q: 'Como fazer pedido online?',
-    a: 'Escolha os sabores no cardápio, selecione o tamanho e toque em pedir no WhatsApp para finalizar.',
+    q: 'Posso pedir pizza meia a meia?',
+    a: 'Sim. Meia a meia está disponível nos tamanhos Média, Grande e Família. O valor segue o sabor mais caro, e você pode combinar sabores de seções diferentes.',
   },
   {
     q: 'Qual é o horário da pizzaria?',

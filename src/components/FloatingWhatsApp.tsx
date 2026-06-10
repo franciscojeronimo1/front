@@ -1,7 +1,12 @@
 import { whatsappHref } from '../content/siteContent'
+import { useOrder } from '../context/OrderContext'
 
 export function FloatingWhatsApp() {
+  const { itemCount } = useOrder()
   const href = whatsappHref('pedido')
+
+  if (itemCount > 0) return null
+
   return (
     <a
       href={href}
