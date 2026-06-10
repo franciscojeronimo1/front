@@ -5,7 +5,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-brand-950/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
-        <a href="#" className="group flex flex-col gap-0.5">
+        <a href="/" className="group flex flex-col gap-0.5" aria-label="Claudia Delivery — início">
           <span className="bg-gradient-to-r from-accent-400 to-amber-200 bg-clip-text text-lg font-semibold tracking-tight text-transparent sm:text-xl">
             {siteContent.brandName}
           </span>

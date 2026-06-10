@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <meta name="author" content="Claudia Delivery" />
@@ -31,8 +32,21 @@
     />
     <meta property="og:url" content="https://pizzariadeliverysj.com/" />
     <meta property="og:site_name" content="Claudia Delivery" />
-    <meta property="og:image" content="https://pizzariadeliverysj.com/favicon.svg" />
+    <meta
+      property="og:image"
+      content="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&h=630&q=80"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Pizza artesanal da Claudia Delivery em Santana do Jacaré, MG"
+    />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&h=630&q=80"
+    />
     <meta
       name="twitter:title"
       content="Claudia Delivery | Pizzaria em Santana do Jacaré"
@@ -41,40 +55,111 @@
       name="twitter:description"
       content="Peça pizza em Santana do Jacaré direto pelo WhatsApp."
     />
+    <link
+      rel="preload"
+      as="image"
+      href="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=2000&q=80"
+      fetchpriority="high"
+    />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Restaurant",
-        "name": "Claudia Delivery",
-        "url": "https://pizzariadeliverysj.com/",
-        "image": "https://pizzariadeliverysj.com/favicon.svg",
-        "telephone": "+55 35 99865-5637",
-        "servesCuisine": ["Pizza"],
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Santana do Jacaré",
-          "addressRegion": "MG",
-          "addressCountry": "BR"
-        },
-        "areaServed": "Santana do Jacaré",
-        "priceRange": "$$",
-        "openingHoursSpecification": [
+        "@graph": [
           {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": [
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-              "Sunday"
+            "@type": "WebSite",
+            "@id": "https://pizzariadeliverysj.com/#website",
+            "url": "https://pizzariadeliverysj.com/",
+            "name": "Claudia Delivery",
+            "description": "Pizzaria em Santana do Jacaré com delivery e cardápio online.",
+            "inLanguage": "pt-BR",
+            "publisher": { "@id": "https://pizzariadeliverysj.com/#restaurant" }
+          },
+          {
+            "@type": "Restaurant",
+            "@id": "https://pizzariadeliverysj.com/#restaurant",
+            "name": "Claudia Delivery",
+            "url": "https://pizzariadeliverysj.com/",
+            "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&h=630&q=80",
+            "telephone": "+55 35 99865-5637",
+            "servesCuisine": ["Pizza", "Pizzaria brasileira"],
+            "hasMenu": "https://pizzariadeliverysj.com/#cardapio",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Santana do Jacaré",
+              "addressRegion": "MG",
+              "addressCountry": "BR"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": -20.904,
+              "longitude": -45.131
+            },
+            "areaServed": {
+              "@type": "City",
+              "name": "Santana do Jacaré"
+            },
+            "priceRange": "$$",
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday"
+                ],
+                "opens": "18:00",
+                "closes": "22:00"
+              }
             ],
-            "opens": "18:00",
-            "closes": "22:00"
+            "sameAs": ["https://www.instagram.com/claudiaclementinodasilva/"],
+            "potentialAction": {
+              "@type": "OrderAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://wa.me/5535999865637",
+                "actionPlatform": [
+                  "http://schema.org/MobileWebPlatform",
+                  "http://schema.org/DesktopWebPlatform"
+                ]
+              },
+              "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModeOwnFleet"
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://pizzariadeliverysj.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "A Claudia Delivery atende toda a cidade de Santana do Jacaré?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Atendemos Santana do Jacaré e regiões próximas. Confirme seu bairro no WhatsApp para validar taxa e tempo de entrega."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Como fazer pedido online na Claudia Delivery?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Escolha os sabores no cardápio, selecione o tamanho e toque em pedir no WhatsApp para finalizar."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Qual é o horário da pizzaria Claudia Delivery?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Horário: 18:00 às 22:00, todos os dias."
+                }
+              }
+            ]
           }
-        ],
-        "sameAs": ["https://www.instagram.com/claudiaclementinodasilva/"]
+        ]
       }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -86,6 +171,14 @@
     <title>Claudia Delivery | Pizzaria em Santana do Jacaré</title>
   </head>
   <body class="bg-brand-950 text-zinc-100 antialiased font-sans">
+    <noscript>
+      <h1>Claudia Delivery — Pizzaria em Santana do Jacaré</h1>
+      <p>
+        Cardápio completo de pizzas com entrega em Santana do Jacaré, MG.
+        Peça pelo WhatsApp: (35) 99865-5637. Horário: 18h às 22h.
+      </p>
+      <p><a href="https://wa.me/5535999865637">Fazer pedido no WhatsApp</a></p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -4,6 +4,13 @@ export const SEO_STATE = 'MG'
 export const SEO_COUNTRY = 'BR'
 export const SEO_SITE_URL = 'https://pizzariadeliverysj.com'
 
+/** Imagem para compartilhamento (Open Graph / Twitter). Proporção 1.91:1. */
+export const SEO_OG_IMAGE =
+  'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&h=630&q=80'
+
+export const SEO_OG_IMAGE_ALT =
+  'Pizza artesanal da Claudia Delivery em Santana do Jacaré, MG'
+
 /** Link internacional (wa.me). */
 export const WHATSAPP_PHONE_E164 = '5535999865637'
 

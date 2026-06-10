@@ -100,9 +100,9 @@ export function MenuCardapio() {
                 <p className="font-display text-4xl font-semibold uppercase tracking-[0.04em] text-neutral-950 sm:text-5xl">
                   PIZZAS
                 </p>
-                <p className="mt-2 font-script text-4xl text-neutral-900 sm:text-5xl">
+                <h3 className="mt-2 font-script text-4xl text-neutral-900 sm:text-5xl">
                   {secao.subtitulo}
-                </p>
+                </h3>
               </header>
 
               <ul className="mt-2">

@@ -24,8 +24,8 @@ export function LocalSeoContent() {
             Pizzaria em {SEO_CITY} - {SEO_STATE}
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            A {siteContent.brandName} e especializada em delivery de pizza em {SEO_CITY}.
-            Nosso cardapio online facilita seu pedido com contato direto pelo WhatsApp.
+            A {siteContent.brandName} é especializada em delivery de pizza em {SEO_CITY}.
+            Nosso cardápio online facilita seu pedido com contato direto pelo WhatsApp.
           </p>
         </div>
 
