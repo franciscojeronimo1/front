@@ -36,10 +36,10 @@ export function Footer() {
         </div>
         <div className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-8">
           <p className="text-lg font-medium text-white">
-            Sua pizzaria em Santana do Jacaré está aqui
+            Pizza e esfiha em Santana do Jacaré
           </p>
           <p className="text-sm text-zinc-400">
-            Escolha sabor e tamanho no cardápio e envie seu pedido pelo WhatsApp.
+            Escolha pizza, combos de esfiha ou 10 sabores à escolha e envie pelo WhatsApp.
           </p>
           <WhatsAppButton className="w-full justify-center md:w-fit">
             Falar agora com a Claudia Delivery

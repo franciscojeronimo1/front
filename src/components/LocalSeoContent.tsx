@@ -10,6 +10,10 @@ const faqs = [
     a: 'Sim. Meia a meia está disponível nos tamanhos Média, Grande e Família. O valor segue o sabor mais caro, e você pode combinar sabores de seções diferentes.',
   },
   {
+    q: 'Vocês também vendem esfiha?',
+    a: 'Sim. Temos combos prontos e a opção de 10 esfihas com sabores à sua escolha por R$ 40,00. Entrega de esfihas de segunda a quinta — peça pelo WhatsApp.',
+  },
+  {
     q: 'Qual é o horário da pizzaria?',
     a: siteContent.footer.hours,
   },
@@ -24,12 +28,12 @@ export function LocalSeoContent() {
             Pizzaria em {SEO_CITY} - {SEO_STATE}
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
-            A {siteContent.brandName} é especializada em delivery de pizza em {SEO_CITY}.
+            A {siteContent.brandName} faz delivery de pizza e esfiha em {SEO_CITY}.
             Nosso cardápio online facilita seu pedido com contato direto pelo WhatsApp.
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {faqs.map((item) => (
             <article
               key={item.q}

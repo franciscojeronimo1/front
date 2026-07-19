@@ -11,11 +11,17 @@ export function Header() {
             {siteContent.brandName}
           </span>
           <span className="text-xs font-medium uppercase tracking-[0.2em] text-zinc-500">
-            Pizzaria em Santana do Jacaré
+            Pizza e esfiha · Santana do Jacaré
           </span>
         </a>
         <div className="flex items-center gap-3 sm:gap-6">
           <OpenStatusBadge className="hidden lg:inline-flex" showHoursWhenClosed={false} />
+          <a
+            href="#esfihas"
+            className="hidden text-sm font-medium text-zinc-300 transition hover:text-white sm:inline-flex"
+          >
+            Esfihas
+          </a>
           <a
             href="#cardapio"
             className="text-sm font-medium text-zinc-300 transition hover:text-white"

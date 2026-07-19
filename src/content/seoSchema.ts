@@ -4,6 +4,7 @@ import {
   type SizePrices,
   cardapioSecoes,
 } from './cardapio'
+import { esfihaCombos, esfihaCustomPack } from './esfihas'
 import { SEO_SITE_URL } from './siteContent'
 
 function minPrice(prices: SizePrices): number {
@@ -46,10 +47,40 @@ export function buildMenuSchema() {
     '@id': `${SEO_SITE_URL}/#cardapio`,
     name: 'Cardápio Claudia Delivery',
     inLanguage: 'pt-BR',
-    hasMenuSection: cardapioSecoes.map((secao) => ({
-      '@type': 'MenuSection',
-      name: secao.subtitulo,
-      hasMenuItem: secao.itens.map((item) => menuItemSchema(item, secao)),
-    })),
+    hasMenuSection: [
+      ...cardapioSecoes.map((secao) => ({
+        '@type': 'MenuSection',
+        name: secao.subtitulo,
+        hasMenuItem: secao.itens.map((item) => menuItemSchema(item, secao)),
+      })),
+      {
+        '@type': 'MenuSection',
+        name: 'Esfihas',
+        hasMenuItem: [
+          {
+            '@type': 'MenuItem',
+            name: esfihaCustomPack.name,
+            description: esfihaCustomPack.description,
+            offers: {
+              '@type': 'Offer',
+              price: esfihaCustomPack.price.toFixed(2),
+              priceCurrency: 'BRL',
+              availability: 'https://schema.org/InStock',
+            },
+          },
+          ...esfihaCombos.map((combo) => ({
+            '@type': 'MenuItem',
+            name: combo.name,
+            description: combo.items.join(', '),
+            offers: {
+              '@type': 'Offer',
+              price: combo.price.toFixed(2),
+              priceCurrency: 'BRL',
+              availability: 'https://schema.org/InStock',
+            },
+          })),
+        ],
+      },
+    ],
   }
 }

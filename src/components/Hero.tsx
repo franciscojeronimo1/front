@@ -68,7 +68,7 @@ export function Hero() {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-950/80 via-transparent to-transparent" />
             <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/10 bg-black/50 p-4 backdrop-blur-md">
               <p className="text-sm font-medium text-white">
-                Pizzaria em Santana do Jacaré com cardápio completo no site.
+                Pizza e esfiha em Santana do Jacaré — cardápio completo no site.
               </p>
             </div>
           </div>

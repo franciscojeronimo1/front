@@ -7,6 +7,7 @@ import { Hero } from './components/Hero'
 import { HowToOrder } from './components/HowToOrder'
 import { LocalSeoContent } from './components/LocalSeoContent'
 import { MenuCardapio } from './components/MenuCardapio'
+import { MenuEsfihas } from './components/MenuEsfihas'
 import { OrderCartBar } from './components/OrderCartBar'
 import { OrderModal } from './components/OrderModal'
 import { SeoJsonLd } from './components/SeoJsonLd'
@@ -24,6 +25,7 @@ function AppContent() {
         <TrustBar />
         <HowToOrder />
         <FeaturedPizzas />
+        <MenuEsfihas />
         <MenuCardapio />
         <LocalSeoContent />
       </main>

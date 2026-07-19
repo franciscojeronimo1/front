@@ -18,21 +18,14 @@ function startingPrice(item: CardapioItem, secao: CardapioSecao): string | null 
   return `A partir de ${formatPrecoBRL(minPrice(prices))}`
 }
 
-const cardGradients = [
-  'from-[#9f1239]/30 via-brand-900 to-brand-950',
-  'from-amber-700/25 via-brand-900 to-brand-950',
-  'from-orange-800/20 via-brand-900 to-brand-950',
-  'from-rose-900/25 via-brand-900 to-brand-950',
-] as const
-
 export function FeaturedPizzas() {
   const featured = siteContent.featuredPizzas
-    .map((entry, index) => {
+    .map((entry) => {
       const secao = cardapioSecoes.find((section) => section.id === entry.sectionId)
       const item = secao?.itens.find((pizza) => pizza.name === entry.itemName)
       if (!secao || !item) return null
 
-      return { entry, secao, item, index }
+      return { entry, secao, item }
     })
     .filter((value): value is NonNullable<typeof value> => value !== null)
 
@@ -62,7 +55,7 @@ export function FeaturedPizzas() {
         </div>
 
         <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {featured.map(({ entry, secao, item, index }) => {
+          {featured.map(({ entry, secao, item }) => {
             const price = startingPrice(item, secao)
 
             return (
@@ -70,10 +63,15 @@ export function FeaturedPizzas() {
                 key={`${entry.sectionId}-${entry.itemName}`}
                 className="animate-rise group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03]"
               >
-                <div
-                  className={`relative flex h-36 items-end bg-gradient-to-br ${cardGradients[index % cardGradients.length]} p-5`}
-                >
-                  <span className="rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-zinc-200 backdrop-blur-sm">
+                <div className="relative flex h-36 items-end overflow-hidden p-5">
+                  <img
+                    src={entry.image}
+                    alt={`Pizza ${item.name}`}
+                    className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-950/80 via-brand-950/25 to-transparent" />
+                  <span className="relative rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-zinc-200 backdrop-blur-sm">
                     {entry.tag}
                   </span>
                 </div>

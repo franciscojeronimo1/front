@@ -51,9 +51,9 @@ export const imagery = {
 export const siteContent = {
   brandName: 'Claudia Delivery',
   hero: {
-    title: 'Pizzaria em Santana do Jacaré com entrega rápida',
+    title: 'Pizzaria e esfihas em Santana do Jacaré',
     subtitle:
-      'Escolha entre dezenas de sabores, monte seu pedido em segundos e finalize pelo WhatsApp.',
+      'Peça pizza ou combos de esfiha: monte o pedido em segundos e finalize pelo WhatsApp.',
     ctaPrimary: 'Pedir no WhatsApp',
     ctaSecondary: 'Ver cardápio',
   },
@@ -66,17 +66,17 @@ export const siteContent = {
     {
       icon: 'click' as const,
       title: 'Pedido em 1 clique',
-      description: 'Monte inteira ou meia a meia, adicione várias pizzas e envie tudo no WhatsApp.',
+      description: 'Monte pizza ou peça combos de esfiha e envie tudo no WhatsApp.',
     },
     {
       icon: 'flavors' as const,
-      title: '+20 sabores',
-      description: 'Tradicional, bacon, queijos, carnes e opções vegetarianas no cardápio.',
+      title: 'Pizza e esfiha',
+      description: '+20 sabores de pizza e combos de esfiha — inclusive 10 à escolha.',
     },
     {
       icon: 'hours' as const,
       title: 'Todos os dias',
-      description: 'Funcionamento das 18:00 às 22:00, de segunda a domingo.',
+      description: 'Pizza todos os dias. Esfihas de segunda a quinta.',
     },
   ],
   orderSteps: [
@@ -94,10 +94,34 @@ export const siteContent = {
     },
   ],
   featuredPizzas: [
-    { sectionId: 'bacon-alho', itemName: 'PORTUGUESA COMPLETA', tag: 'Clássica da casa' },
-    { sectionId: 'bacon-alho', itemName: 'FRANGOLINO', tag: 'Mais pedida' },
-    { sectionId: 'queijos', itemName: '4 QUEIJOS', tag: 'Cremosa' },
-    { sectionId: 'carnes', itemName: 'COSTELA', tag: 'Premium' },
+    {
+      sectionId: 'bacon-alho',
+      itemName: 'PORTUGUESA COMPLETA',
+      tag: 'Clássica da casa',
+      image:
+        'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      sectionId: 'bacon-alho',
+      itemName: 'FRANGOLINO',
+      tag: 'Mais pedida',
+      image:
+        'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      sectionId: 'queijos',
+      itemName: '4 QUEIJOS',
+      tag: 'Cremosa',
+      image:
+        'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      sectionId: 'carnes',
+      itemName: 'COSTELA',
+      tag: 'Premium',
+      image:
+        'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=800&q=80',
+    },
   ],
   cardapioNota:
     'Meia a meia em Média, Grande e Família (valor do sabor mais caro). Pode misturar sabores de qualquer seção.',
