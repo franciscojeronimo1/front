@@ -28,7 +28,7 @@ export function MenuEsfihas() {
   return (
     <section id="esfihas" className="border-b border-white/10 bg-brand-950">
       <div className="mx-auto max-w-6xl px-5 py-16 lg:py-24">
-        <div className="mb-10 flex flex-col gap-8 lg:mb-14 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-10 flex flex-col gap-8 lg:mb-14 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-xl space-y-4">
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent-400">
               {esfihasContent.subtitle}
@@ -42,11 +42,11 @@ export function MenuEsfihas() {
             </p>
           </div>
 
-          <div className="relative w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-black/40 lg:max-w-xs">
+          <div className="relative w-full max-w-sm shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-2xl shadow-black/40 lg:max-w-xs">
             <img
               src={esfihasFlyer}
               alt="Cardápio de combos de esfiha da Esfiharia da Cláudia Delivery"
-              className="aspect-[3/4] w-full object-cover object-top"
+              className="h-auto w-full object-contain"
               loading="lazy"
             />
           </div>
