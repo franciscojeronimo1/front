@@ -59,6 +59,20 @@ export function Footer() {
           </div>
         </div>
       </div>
+
+      <div className="border-t border-white/5">
+        <p className="mx-auto max-w-6xl px-5 py-4 text-center text-xs text-zinc-600">
+          Feito por{' '}
+          <a
+            href="https://www.instagram.com/franciscojeronimo0/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-zinc-500 transition hover:text-zinc-300"
+          >
+            Francisco Jerônimo
+          </a>
+        </p>
+      </div>
     </footer>
   )
 }
