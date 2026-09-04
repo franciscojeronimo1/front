@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { ArModel } from '../content/arModels'
 
 type ArViewerModalProps = {
@@ -7,6 +7,10 @@ type ArViewerModalProps = {
 }
 
 export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
+  const [viewerEl, setViewerEl] = useState<HTMLElement | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
+
   useEffect(() => {
     if (!model) return
 
@@ -23,6 +27,36 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
       window.removeEventListener('keydown', onKeyDown)
     }
   }, [model, onClose])
+
+  useEffect(() => {
+    if (!model || !viewerEl) return
+
+    setIsLoading(true)
+    setHasError(false)
+
+    function handleLoad() {
+      setIsLoading(false)
+      setHasError(false)
+    }
+
+    function handleError() {
+      setIsLoading(false)
+      setHasError(true)
+    }
+
+    // Se o modelo já estiver em cache, o evento `load` pode ter passado.
+    if ((viewerEl as HTMLElement & { loaded?: boolean }).loaded) {
+      handleLoad()
+    }
+
+    viewerEl.addEventListener('load', handleLoad)
+    viewerEl.addEventListener('error', handleError)
+
+    return () => {
+      viewerEl.removeEventListener('load', handleLoad)
+      viewerEl.removeEventListener('error', handleError)
+    }
+  }, [model, viewerEl])
 
   if (!model) return null
 
@@ -51,7 +85,8 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
               Tamanho {model.sizeLabel} — {model.sizeCm} cm
             </p>
             <p className="mt-2 text-sm text-zinc-400">
-              Gire a pizza para ver mais detalhes. No celular, abra a câmera para ver o tamanho real.
+              Gire a pizza para ver mais detalhes. No celular, abra a câmera para ver o tamanho
+              real.
             </p>
           </div>
           <button
@@ -65,7 +100,30 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
         </div>
 
         <div className="relative min-h-[320px] flex-1 bg-gradient-to-b from-brand-900 to-brand-950 sm:min-h-[420px]">
+          {isLoading ? (
+            <div
+              className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-brand-950/90"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+            >
+              <div className="ar-spinner" aria-hidden="true" />
+              <div className="text-center">
+                <p className="text-sm font-medium text-white">Preparando a pizza…</p>
+                <p className="mt-1 text-xs text-zinc-400">Isso pode levar alguns segundos</p>
+              </div>
+            </div>
+          ) : null}
+
+          {hasError ? (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-brand-950 px-6 text-center">
+              <p className="text-sm font-medium text-white">Não foi possível carregar a pizza</p>
+              <p className="text-xs text-zinc-400">Feche e tente abrir de novo.</p>
+            </div>
+          ) : null}
+
           <model-viewer
+            ref={(el) => setViewerEl(el)}
             key={model.src}
             src={model.src}
             alt={model.alt}
@@ -79,14 +137,20 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
             exposure="1"
             scale={model.scale}
             loading="eager"
-            style={{ width: '100%', height: '100%', minHeight: '320px' }}
+            style={{
+              width: '100%',
+              height: '100%',
+              minHeight: '320px',
+              opacity: isLoading || hasError ? 0 : 1,
+              transition: 'opacity 0.25s ease',
+            }}
           />
         </div>
 
         <div className="space-y-2 border-t border-white/10 px-5 py-4 text-sm text-zinc-400">
           <p>
-            No celular, toque no botão da câmera no visualizador para ver a pizza no tamanho
-            real, como se estivesse na sua mesa.
+            No celular, toque no botão da câmera no visualizador para ver a pizza no tamanho real,
+            como se estivesse na sua mesa.
           </p>
           <p className="text-xs text-zinc-500">
             Dica: aponte para o chão ou para a mesa e espere a pizza aparecer.

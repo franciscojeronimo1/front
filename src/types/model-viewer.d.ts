@@ -19,6 +19,7 @@ type ModelViewerProps = DetailedHTMLProps<
   poster?: string
   loading?: 'auto' | 'lazy' | 'eager'
   reveal?: 'auto' | 'manual'
+  ref?: (el: HTMLElement | null) => void
 }
 
 declare module 'react' {
