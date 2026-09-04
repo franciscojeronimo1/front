@@ -7,6 +7,36 @@ type ArViewerModalProps = {
   onClose: () => void
 }
 
+function lockPageScroll() {
+  const scrollY = window.scrollY
+  const { style: bodyStyle } = document.body
+  const { style: htmlStyle } = document.documentElement
+
+  const previous = {
+    bodyOverflow: bodyStyle.overflow,
+    bodyPosition: bodyStyle.position,
+    bodyTop: bodyStyle.top,
+    bodyWidth: bodyStyle.width,
+    htmlOverflow: htmlStyle.overflow,
+    scrollY,
+  }
+
+  htmlStyle.overflow = 'hidden'
+  bodyStyle.overflow = 'hidden'
+  bodyStyle.position = 'fixed'
+  bodyStyle.top = `-${scrollY}px`
+  bodyStyle.width = '100%'
+
+  return () => {
+    htmlStyle.overflow = previous.htmlOverflow
+    bodyStyle.overflow = previous.bodyOverflow
+    bodyStyle.position = previous.bodyPosition
+    bodyStyle.top = previous.bodyTop
+    bodyStyle.width = previous.bodyWidth
+    window.scrollTo(0, previous.scrollY)
+  }
+}
+
 export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
   const [viewerEl, setViewerEl] = useState<HTMLElement | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -14,26 +44,40 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
   const [cameraOpen, setCameraOpen] = useState(false)
 
   useEffect(() => {
-    if (!model) {
-      setCameraOpen(false)
-      return
-    }
+    if (!model) setCameraOpen(false)
+  }, [model])
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+  useEffect(() => {
+    if (!model) return
 
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        if (cameraOpen) setCameraOpen(false)
-        else onClose()
+    const unlock = lockPageScroll()
+
+    function preventBackgroundTouch(event: TouchEvent) {
+      // Bloqueia scroll/bounce do fundo enquanto gira a pizza.
+      if (event.target instanceof Element && event.target.closest('model-viewer')) {
+        event.preventDefault()
       }
     }
 
-    window.addEventListener('keydown', onKeyDown)
+    document.addEventListener('touchmove', preventBackgroundTouch, { passive: false })
+
     return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', onKeyDown)
+      unlock()
+      document.removeEventListener('touchmove', preventBackgroundTouch)
     }
+  }, [model])
+
+  useEffect(() => {
+    if (!model) return
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== 'Escape') return
+      if (cameraOpen) setCameraOpen(false)
+      else onClose()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
   }, [model, onClose, cameraOpen])
 
   useEffect(() => {
@@ -73,16 +117,18 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-end justify-center bg-black/80 p-0 sm:items-center sm:p-5"
+      className="fixed inset-0 z-[70] flex touch-none items-end justify-center overscroll-none bg-black/80 p-0 sm:items-center sm:p-5"
       role="presentation"
       onClick={onClose}
+      onTouchMove={(event) => event.preventDefault()}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="ar-modal-title"
-        className="flex max-h-[94vh] w-full max-w-lg flex-col overflow-hidden rounded-t-[1.75rem] border border-white/10 bg-brand-950 shadow-2xl sm:rounded-[1.75rem]"
+        className="flex max-h-[94vh] w-full max-w-lg touch-auto flex-col overflow-hidden overscroll-contain rounded-t-[1.75rem] border border-white/10 bg-brand-950 shadow-2xl sm:rounded-[1.75rem]"
         onClick={(event) => event.stopPropagation()}
+        onTouchMove={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
           <div>
@@ -110,7 +156,7 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
           </button>
         </div>
 
-        <div className="relative min-h-[320px] flex-1 bg-gradient-to-b from-brand-900 to-brand-950 sm:min-h-[420px]">
+        <div className="relative min-h-[320px] flex-1 touch-none overscroll-none bg-gradient-to-b from-brand-900 to-brand-950 sm:min-h-[420px]">
           {isLoading ? (
             <div
               className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-brand-950/90"
@@ -139,7 +185,7 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
             src={model.src}
             alt={model.alt}
             camera-controls
-            touch-action="pan-y"
+            touch-action="none"
             auto-rotate
             shadow-intensity="1"
             exposure="1"
@@ -149,6 +195,7 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
               width: '100%',
               height: '100%',
               minHeight: '320px',
+              touchAction: 'none',
               opacity: isLoading || hasError ? 0 : 1,
               transition: 'opacity 0.25s ease',
             }}
@@ -165,9 +212,7 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
             <CameraIcon />
             Abrir câmera
           </button>
-          <p className="text-center text-xs text-zinc-500">
-            Usa a câmera do seu celular.
-          </p>
+          <p className="text-center text-xs text-zinc-500">Usa a câmera do seu celular.</p>
         </div>
       </div>
     </div>
