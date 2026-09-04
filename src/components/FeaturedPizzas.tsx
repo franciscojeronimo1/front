@@ -42,22 +42,22 @@ export function FeaturedPizzas() {
 
   return (
     <section className="border-b border-white/10 bg-brand-950">
-      <div className="mx-auto max-w-6xl px-5 py-16 lg:py-20">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-5 sm:py-16 lg:py-20">
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-xl space-y-3">
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent-400">
               Destaques
             </p>
-            <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-4xl">
               Sabores que mais saem
             </h2>
-            <p className="text-lg text-zinc-400">
+            <p className="text-base text-zinc-400 sm:text-lg">
               Os preferidos da casa — monte inteira ou meia a meia e adicione ao pedido.
             </p>
           </div>
           <a
             href="#cardapio"
-            className="text-sm font-semibold text-accent-400 transition hover:text-accent-500"
+            className="inline-flex min-h-10 items-center text-sm font-semibold text-accent-400 transition hover:text-accent-500"
           >
             Ver todos os sabores →
           </a>
@@ -107,7 +107,7 @@ export function FeaturedPizzas() {
                     {showAr ? (
                       <ViewInArButton
                         onClick={() => setArOpen(true)}
-                        className="inline-flex w-full items-center justify-center rounded-xl border border-accent-400/40 bg-accent-400/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-accent-400 transition hover:bg-accent-400/20"
+                        className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-accent-400/40 bg-accent-400/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-accent-400 transition hover:bg-accent-400/20"
                       >
                         Ver tamanho real
                       </ViewInArButton>
@@ -118,7 +118,7 @@ export function FeaturedPizzas() {
                         sectionLabel: secao.subtitulo,
                         itemName: item.name,
                       }}
-                      className="inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition group-hover:brightness-110 hover:bg-[#20bd5a]"
+                      className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-[#25D366] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition group-hover:brightness-110 hover:bg-[#20bd5a]"
                     >
                       Pedir
                     </OrderPizzaButton>

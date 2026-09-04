@@ -8,7 +8,7 @@ type OrderPizzaButtonProps = {
 }
 
 const defaultClassName =
-  'inline-flex shrink-0 items-center justify-center rounded-xl border border-[#9f1239]/35 bg-[#9f1239]/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#9f1239] transition hover:bg-[#9f1239]/10 hover:text-[#7f122d]'
+  'inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-[#9f1239]/35 bg-[#9f1239]/[0.06] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#9f1239] transition hover:bg-[#9f1239]/10 hover:text-[#7f122d]'
 
 export function OrderPizzaButton({
   pizza,

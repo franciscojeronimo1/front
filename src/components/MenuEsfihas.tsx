@@ -22,31 +22,31 @@ function WhatsAppGlyph({ className }: { className?: string }) {
 }
 
 const orderBtnClass =
-  'inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#20bd5a]'
+  'inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#20bd5a]'
 
 export function MenuEsfihas() {
   return (
     <section id="esfihas" className="border-b border-white/10 bg-brand-950">
-      <div className="mx-auto max-w-6xl px-5 py-16 lg:py-24">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-5 sm:py-16 lg:py-24">
         <div className="mb-10 flex flex-col gap-8 lg:mb-14 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-xl space-y-4">
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-accent-400">
               {esfihasContent.subtitle}
             </p>
-            <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-4xl">
               {esfihasContent.title}
             </h2>
-            <p className="text-lg text-zinc-400">{esfihasContent.note}</p>
+            <p className="text-base text-zinc-400 sm:text-lg">{esfihasContent.note}</p>
             <p className="text-sm font-medium text-zinc-500">
               Entrega: {esfihasContent.deliveryDays}
             </p>
           </div>
 
-          <div className="relative w-full max-w-sm shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-2xl shadow-black/40 lg:max-w-xs">
+          <div className="relative order-last w-full max-w-sm shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-2xl shadow-black/40 lg:order-none lg:max-w-xs">
             <img
               src={esfihasFlyer}
               alt="Cardápio de combos de esfiha da Esfiharia da Cláudia Delivery"
-              className="h-auto w-full object-contain"
+              className="mx-auto max-h-64 w-full object-contain sm:max-h-none"
               loading="lazy"
             />
           </div>

@@ -12,11 +12,11 @@ type WhatsAppButtonProps = {
 const variants: Record<NonNullable<WhatsAppButtonProps['variant']>, string> =
   {
     primary:
-      'rounded-2xl bg-gradient-to-br from-accent-400 to-accent-500 px-6 py-3 text-base font-semibold text-brand-950 shadow-lg shadow-black/35 transition hover:brightness-110 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-400',
+      'min-h-12 rounded-2xl bg-gradient-to-br from-accent-400 to-accent-500 px-6 py-3 text-base font-semibold text-brand-950 shadow-lg shadow-black/35 transition hover:brightness-110 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-400',
     ghost:
-      'rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-base font-medium text-white backdrop-blur transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40',
+      'min-h-12 rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-base font-medium text-white backdrop-blur transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40',
     solidWhatsApp:
-      'rounded-2xl bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-black/30 transition hover:bg-[#20bd5a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]',
+      'min-h-11 rounded-2xl bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-black/30 transition hover:bg-[#20bd5a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]',
   }
 
 export function WhatsAppButton({

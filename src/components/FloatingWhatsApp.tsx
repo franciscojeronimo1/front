@@ -13,7 +13,8 @@ export function FloatingWhatsApp() {
       target="_blank"
       rel="noreferrer"
       aria-label="Abrir conversa da Claudia Delivery no WhatsApp"
-      className="fixed bottom-6 right-5 z-50 flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-2xl shadow-black/45 ring-2 ring-black/40 transition hover:scale-[1.02] hover:bg-[#20bd5a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366] sm:bottom-8 sm:right-8"
+      className="fixed right-4 z-50 flex min-h-12 items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-2xl shadow-black/45 ring-2 ring-black/40 transition hover:scale-[1.02] hover:bg-[#20bd5a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366] sm:right-8"
+      style={{ bottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}
     >
       <svg
         viewBox="0 0 24 24"

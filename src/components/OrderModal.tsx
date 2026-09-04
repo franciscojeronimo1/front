@@ -30,6 +30,16 @@ export function OrderModal() {
   const catalog = useMemo(() => getAllPizzas(), [])
 
   useEffect(() => {
+    if (!modalOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [modalOpen])
+
+  useEffect(() => {
     if (!modalOpen || !selectedPizza) return
     setKind('whole')
     setSize(defaultSizeForKind('whole'))
@@ -110,15 +120,15 @@ export function OrderModal() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="order-modal-title"
-        className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-[1.75rem] border border-white/10 bg-brand-950 shadow-2xl sm:rounded-[1.75rem]"
+        className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-[1.75rem] border border-white/10 bg-brand-950 pb-[env(safe-area-inset-bottom)] shadow-2xl sm:rounded-[1.75rem]"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-white/10 bg-brand-950/95 px-5 py-4 backdrop-blur-xl">
-          <div>
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-white/10 bg-brand-950/95 px-4 py-4 backdrop-blur-xl sm:px-5">
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">
               Montar pedido
             </p>
-            <h2 id="order-modal-title" className="mt-1 text-xl font-semibold text-white">
+            <h2 id="order-modal-title" className="mt-1 break-words text-lg font-semibold text-white sm:text-xl">
               {selectedPizza.itemName}
             </h2>
             <p className="mt-1 text-sm text-zinc-400">{selectedPizza.sectionLabel}</p>
@@ -126,7 +136,7 @@ export function OrderModal() {
           <button
             type="button"
             onClick={closeOrderModal}
-            className="rounded-xl border border-white/10 px-3 py-1.5 text-sm text-zinc-400 transition hover:bg-white/5 hover:text-white"
+            className="inline-flex min-h-10 shrink-0 items-center rounded-xl border border-white/10 px-3 py-2 text-sm text-zinc-400 transition hover:bg-white/5 hover:text-white"
           >
             Fechar
           </button>

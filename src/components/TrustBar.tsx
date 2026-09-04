@@ -30,7 +30,7 @@ const icons = {
 export function TrustBar() {
   return (
     <section className="border-b border-white/10 bg-brand-900/40">
-      <div className="mx-auto grid max-w-6xl gap-4 px-5 py-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+      <div className="mx-auto grid max-w-6xl gap-4 px-4 py-8 sm:grid-cols-2 sm:px-5 lg:grid-cols-4 lg:gap-6">
         {siteContent.trustHighlights.map((item) => (
           <article
             key={item.title}

@@ -15,12 +15,16 @@ import { TrustBar } from './components/TrustBar'
 
 function AppContent() {
   const { itemCount } = useOrder()
+  const bottomPad =
+    itemCount > 0
+      ? 'pb-[calc(8.5rem+env(safe-area-inset-bottom))]'
+      : 'pb-[calc(5.5rem+env(safe-area-inset-bottom))]'
 
   return (
     <>
       <SeoJsonLd />
       <Header />
-      <main className={itemCount > 0 ? 'pb-32' : undefined}>
+      <main>
         <Hero />
         <TrustBar />
         <HowToOrder />
@@ -29,7 +33,7 @@ function AppContent() {
         <MenuCardapio />
         <LocalSeoContent />
       </main>
-      <Footer />
+      <Footer className={bottomPad} />
       <OrderModal />
       <OrderCartBar />
       <FloatingWhatsApp />
