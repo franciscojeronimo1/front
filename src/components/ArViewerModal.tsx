@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react'
 import type { ArModel } from '../content/arModels'
+import {
+  getDeviceKind,
+  readCanActivateAr,
+  type ModelViewerArApi,
+} from '../utils/arSupport'
 import { CameraLiveView } from './CameraLiveView'
 
 type ArViewerModalProps = {
   model: ArModel | null
   onClose: () => void
 }
+
+type ArAvailability = 'checking' | 'yes' | 'no'
 
 function lockPageScroll() {
   const scrollY = window.scrollY
@@ -42,9 +49,14 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
   const [cameraOpen, setCameraOpen] = useState(false)
+  const [arAvailability, setArAvailability] = useState<ArAvailability>('checking')
+  const deviceKind = getDeviceKind()
 
   useEffect(() => {
-    if (!model) setCameraOpen(false)
+    if (!model) {
+      setCameraOpen(false)
+      setArAvailability('checking')
+    }
   }, [model])
 
   useEffect(() => {
@@ -53,7 +65,6 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
     const unlock = lockPageScroll()
 
     function preventBackgroundTouch(event: TouchEvent) {
-      // Bloqueia scroll/bounce do fundo enquanto gira a pizza.
       if (event.target instanceof Element && event.target.closest('model-viewer')) {
         event.preventDefault()
       }
@@ -85,20 +96,29 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
 
     setIsLoading(true)
     setHasError(false)
+    setArAvailability('checking')
+
+    const viewer = viewerEl as ModelViewerArApi
+
+    function syncArAvailability() {
+      setArAvailability(readCanActivateAr(viewer) ? 'yes' : 'no')
+    }
 
     function handleLoad() {
       setIsLoading(false)
       setHasError(false)
+      // O model-viewer atualiza canActivateAR após carregar / escolher o modo.
+      window.setTimeout(syncArAvailability, 150)
+      window.setTimeout(syncArAvailability, 600)
     }
 
     function handleError() {
       setIsLoading(false)
       setHasError(true)
+      setArAvailability('no')
     }
 
-    if ((viewerEl as HTMLElement & { loaded?: boolean }).loaded) {
-      handleLoad()
-    }
+    if (viewer.loaded) handleLoad()
 
     viewerEl.addEventListener('load', handleLoad)
     viewerEl.addEventListener('error', handleError)
@@ -109,11 +129,22 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
     }
   }, [model, viewerEl])
 
+  function handleOpenRealAr() {
+    const viewer = viewerEl as ModelViewerArApi | null
+    if (!viewer?.activateAR || !readCanActivateAr(viewer)) return
+    // Precisa partir do clique do usuário (Scene Viewer / Quick Look).
+    void viewer.activateAR()
+  }
+
   if (!model) return null
 
   if (cameraOpen) {
     return <CameraLiveView model={model} onClose={() => setCameraOpen(false)} />
   }
+
+  const showRealAr = arAvailability === 'yes'
+  const busy = isLoading || hasError
+  const tipText = getTipText(deviceKind, arAvailability)
 
   return (
     <div
@@ -142,8 +173,7 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
               Tamanho {model.sizeLabel} — {model.sizeCm} cm
             </p>
             <p className="mt-2 text-sm text-zinc-400">
-              Gire a pizza para ver mais detalhes. Depois abra a câmera para comparar o tamanho
-              real.
+              Gire a pizza para ver mais detalhes. Depois escolha como quer ver o tamanho.
             </p>
           </div>
           <button
@@ -184,6 +214,9 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
             key={model.src}
             src={model.src}
             alt={model.alt}
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            ar-scale="fixed"
             camera-controls
             touch-action="none"
             auto-rotate
@@ -199,24 +232,69 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
               opacity: isLoading || hasError ? 0 : 1,
               transition: 'opacity 0.25s ease',
             }}
-          />
+          >
+            {/* Esconde o botão padrão; usamos nossos botões com texto claro. */}
+            <button slot="ar-button" type="button" style={{ display: 'none' }} tabIndex={-1} />
+          </model-viewer>
         </div>
 
-        <div className="space-y-3 border-t border-white/10 px-5 py-4">
+        <div className="space-y-2.5 border-t border-white/10 px-5 py-4">
+          {arAvailability === 'checking' && !busy ? (
+            <p className="text-center text-xs text-zinc-500">Verificando se o celular permite tamanho real…</p>
+          ) : null}
+
+          {showRealAr ? (
+            <button
+              type="button"
+              onClick={handleOpenRealAr}
+              disabled={busy}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-400 px-4 py-3 text-sm font-semibold text-brand-950 transition hover:bg-accent-500 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <TableIcon />
+              Ver na mesa (tamanho real)
+            </button>
+          ) : null}
+
           <button
             type="button"
             onClick={() => setCameraOpen(true)}
-            disabled={isLoading || hasError}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-400 px-4 py-3 text-sm font-semibold text-brand-950 transition hover:bg-accent-500 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={busy}
+            className={
+              showRealAr
+                ? 'inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50'
+                : 'inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-400 px-4 py-3 text-sm font-semibold text-brand-950 transition hover:bg-accent-500 disabled:cursor-not-allowed disabled:opacity-50'
+            }
           >
             <CameraIcon />
-            Abrir câmera
+            Ver na câmera
           </button>
-          <p className="text-center text-xs text-zinc-500">Usa a câmera do seu celular.</p>
+
+          <p className="text-center text-xs leading-relaxed text-zinc-500">{tipText}</p>
         </div>
       </div>
     </div>
   )
+}
+
+function getTipText(
+  deviceKind: ReturnType<typeof getDeviceKind>,
+  arAvailability: ArAvailability
+): string {
+  if (arAvailability === 'yes') {
+    if (deviceKind === 'ios') {
+      return 'Tamanho real: Câmera para ver como fica a pizza na mesa.'
+    }
+    if (deviceKind === 'android') {
+      return 'Tamanho real: Câmera para ver como fica a pizza na mesa.'
+    }
+    return 'Tamanho real: Câmera para ver como fica a pizza na mesa.'
+  }
+
+  if (deviceKind === 'desktop') {
+    return 'No computador dá para girar a pizza. Para tamanho real na mesa, abra pelo celular.'
+  }
+
+  return 'Neste aparelho o tamanho real na mesa pode não estar disponível. Use a câmera para comparar.'
 }
 
 function CameraIcon() {
@@ -234,6 +312,27 @@ function CameraIcon() {
     >
       <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
       <circle cx="12" cy="13" r="4" />
+    </svg>
+  )
+}
+
+function TableIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 10h18" />
+      <path d="M5 10v10" />
+      <path d="M19 10v10" />
+      <path d="M3 6h18v4H3z" />
     </svg>
   )
 }

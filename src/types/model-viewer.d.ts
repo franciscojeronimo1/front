@@ -20,6 +20,8 @@ type ModelViewerProps = DetailedHTMLProps<
   loading?: 'auto' | 'lazy' | 'eager'
   reveal?: 'auto' | 'manual'
   'interaction-prompt'?: 'auto' | 'when-focused' | 'none'
+  'ar-placement'?: 'floor' | 'wall'
+  children?: React.ReactNode
   ref?: (el: HTMLElement | null) => void
 }
 
