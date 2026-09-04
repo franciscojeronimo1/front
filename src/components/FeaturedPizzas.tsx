@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   type CardapioItem,
   type CardapioSecao,
@@ -5,8 +6,14 @@ import {
   cardapioSecoes,
   formatPrecoBRL,
 } from '../content/cardapio'
+import {
+  hasArModel,
+  PORTUGUESA_COMPLETA_AR_MODEL,
+} from '../content/arModels'
 import { siteContent } from '../content/siteContent'
+import { ArViewerModal } from './ArViewerModal'
 import { OrderPizzaButton } from './OrderPizzaButton'
+import { ViewInArButton } from './ViewInArButton'
 
 function minPrice(prices: SizePrices): number {
   return Math.min(...prices)
@@ -19,6 +26,8 @@ function startingPrice(item: CardapioItem, secao: CardapioSecao): string | null 
 }
 
 export function FeaturedPizzas() {
+  const [arOpen, setArOpen] = useState(false)
+
   const featured = siteContent.featuredPizzas
     .map((entry) => {
       const secao = cardapioSecoes.find((section) => section.id === entry.sectionId)
@@ -57,6 +66,7 @@ export function FeaturedPizzas() {
         <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {featured.map(({ entry, secao, item }) => {
             const price = startingPrice(item, secao)
+            const showAr = hasArModel(item.name)
 
             return (
               <li
@@ -93,22 +103,37 @@ export function FeaturedPizzas() {
                     <p className="text-sm font-semibold text-accent-400">{price}</p>
                   ) : null}
 
-                  <OrderPizzaButton
-                    pizza={{
-                      sectionId: secao.id,
-                      sectionLabel: secao.subtitulo,
-                      itemName: item.name,
-                    }}
-                    className="inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition group-hover:brightness-110 hover:bg-[#20bd5a]"
-                  >
-                    Pedir
-                  </OrderPizzaButton>
+                  <div className="flex flex-col gap-2">
+                    {showAr ? (
+                      <ViewInArButton
+                        onClick={() => setArOpen(true)}
+                        className="inline-flex w-full items-center justify-center rounded-xl border border-accent-400/40 bg-accent-400/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-accent-400 transition hover:bg-accent-400/20"
+                      >
+                        Ver tamanho real
+                      </ViewInArButton>
+                    ) : null}
+                    <OrderPizzaButton
+                      pizza={{
+                        sectionId: secao.id,
+                        sectionLabel: secao.subtitulo,
+                        itemName: item.name,
+                      }}
+                      className="inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition group-hover:brightness-110 hover:bg-[#20bd5a]"
+                    >
+                      Pedir
+                    </OrderPizzaButton>
+                  </div>
                 </div>
               </li>
             )
           })}
         </ul>
       </div>
+
+      <ArViewerModal
+        model={arOpen ? PORTUGUESA_COMPLETA_AR_MODEL : null}
+        onClose={() => setArOpen(false)}
+      />
     </section>
   )
 }
