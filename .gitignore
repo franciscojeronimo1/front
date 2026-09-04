@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Backup do modelo 3D original (muito pesado; o site usa a versão otimizada)
+public/models/*.original.glb

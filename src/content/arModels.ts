@@ -20,7 +20,7 @@ export type ArModel = {
   alt: string
 }
 
-/** Portuguesa Completa — único modelo liberado por enquanto. */
+/** Portuguesa Completa — único modelo liberado por enquanto (GLB otimizado com Draco). */
 export const PORTUGUESA_COMPLETA_AR_MODEL: ArModel = {
   id: 'pizza-portuguesa-completa',
   label: 'Pizza Portuguesa Completa',
