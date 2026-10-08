@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { has3dModel, PORTUGUESA_COMPLETA_AR_MODEL } from '../content/arModels'
 import { bebidas } from '../content/bebidas'
 import {
@@ -13,6 +13,7 @@ import { esfihaImageUrl, fallbackImage, pizzaImage } from '../content/menuImages
 import { siteContent } from '../content/siteContent'
 import { useVisitMode } from '../context/VisitModeContext'
 import { useOrder } from '../context/OrderContext'
+import { MENU_FILTER_EVENT, type MenuFilterTarget } from '../utils/menuNavigation'
 import { ArViewerModal } from './ArViewerModal'
 
 type FilterId =
@@ -140,6 +141,30 @@ export function MenuDigital() {
   const [arOpen, setArOpen] = useState(false)
   const rows = useMemo(() => buildRows(), [])
 
+  useEffect(() => {
+    const scrollToFilters = (target: MenuFilterTarget) => {
+      const row = document.getElementById('cardapio-filtros')
+      if (!row) return
+      row.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const chip = row.querySelector<HTMLElement>(`[data-filter="${target}"]`)
+      if (chip) row.scrollLeft = chip.offsetLeft - row.offsetLeft - 16
+    }
+
+    const onSelect = (event: Event) => {
+      const target = (event as CustomEvent<MenuFilterTarget>).detail
+      setFilter(target)
+      setQuery('')
+      requestAnimationFrame(() => scrollToFilters(target))
+    }
+
+    window.addEventListener(MENU_FILTER_EVENT, onSelect)
+    if (window.location.hash === '#esfihas') {
+      setFilter('esfihas')
+      requestAnimationFrame(() => scrollToFilters('esfihas'))
+    }
+    return () => window.removeEventListener(MENU_FILTER_EVENT, onSelect)
+  }, [])
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return rows.filter((row) => {
@@ -194,17 +219,23 @@ export function MenuDigital() {
           </label>
         </div>
 
-        <div className="chips-scroll mt-5 flex gap-2 overflow-x-auto pb-1">
+        <div
+          id="cardapio-filtros"
+          className="chips-scroll mt-5 flex scroll-mt-24 gap-2 overflow-x-auto pb-1"
+        >
           {FILTERS.map((chip) => {
             const active = filter === chip.id
             return (
               <button
                 key={chip.id}
                 type="button"
+                data-filter={chip.id}
                 onClick={() => {
                   setFilter(chip.id)
                   if (chip.id === 'esfihas') {
-                    document.getElementById('esfihas')?.scrollIntoView({ behavior: 'smooth' })
+                    document
+                      .getElementById('cardapio-filtros')
+                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                   }
                 }}
                 className={

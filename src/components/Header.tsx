@@ -1,6 +1,7 @@
 import { siteContent } from '../content/siteContent'
 import { useVisitMode } from '../context/VisitModeContext'
 import { useOrder } from '../context/OrderContext'
+import { selectMenuFilter } from '../utils/menuNavigation'
 
 export function Header() {
   const { isLocal } = useVisitMode()
@@ -19,10 +20,24 @@ export function Header() {
         </a>
 
         <nav className="hidden items-center gap-6 md:flex">
-          <a href="#cardapio" className="text-sm font-medium text-cream/90 transition hover:text-cream">
+          <a
+            href="#cardapio"
+            onClick={(event) => {
+              event.preventDefault()
+              selectMenuFilter('todas')
+            }}
+            className="text-sm font-medium text-cream/90 transition hover:text-cream"
+          >
             Pizzas
           </a>
-          <a href="#esfihas" className="text-sm font-medium text-cream/90 transition hover:text-cream">
+          <a
+            href="#esfihas"
+            onClick={(event) => {
+              event.preventDefault()
+              selectMenuFilter('esfihas')
+            }}
+            className="text-sm font-medium text-cream/90 transition hover:text-cream"
+          >
             Esfihas
           </a>
           {!isLocal ? (
