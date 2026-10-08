@@ -119,7 +119,7 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
       {
         name: 'RALADÃO',
         ingredients:
-          'Molho vermelho, muçarela, muita calabresa ralada e cola opcional.',
+          'Molho vermelho, muçarela, muita calabresa ralada e cebola opcional.',
         novo: true,
       },
     ],

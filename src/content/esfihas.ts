@@ -55,8 +55,8 @@ export const esfihaCustomPack = {
 export const esfihasContent = {
   title: 'Esfihas e combos',
   subtitle: 'Esfiharia da Cláudia Delivery',
-  note: 'Entrega de esfihas de segunda a quinta. Peça pelo WhatsApp e confirme sabores e endereço.',
-  deliveryDays: 'Segunda a quinta',
+  note: 'Entrega de segunda a segunda. Peça pelo WhatsApp e confirme sabores e endereço.',
+  deliveryDays: 'Segunda a segunda',
 } as const
 
 export function esfihaComboWhatsAppHref(combo: EsfihaCombo): string {
