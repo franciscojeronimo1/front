@@ -22,7 +22,7 @@ export function OpenStatusBadge({
   if (open) {
     return (
       <span
-        className={`inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-300 ${className}`}
+        className={`inline-flex items-center gap-2 rounded-full border border-emerald-400/35 bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-300 ${className}`}
       >
         <span className="relative flex h-2 w-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
@@ -35,12 +35,12 @@ export function OpenStatusBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-zinc-400 ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full border border-cream/20 bg-night/40 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-cream-muted ${className}`}
     >
-      <span className="h-2 w-2 rounded-full bg-zinc-500" aria-hidden />
+      <span className="h-2 w-2 rounded-full bg-cream-muted" aria-hidden />
       Fechado
       {showHoursWhenClosed ? (
-        <span className="normal-case tracking-normal text-zinc-500">
+        <span className="normal-case tracking-normal text-cream-muted/80">
           · hoje das {restaurantHoursLabel()}
         </span>
       ) : null}

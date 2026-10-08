@@ -21,7 +21,7 @@ function flavorKey(flavor: Pick<PizzaRef, 'sectionId' | 'itemName'>): string {
 }
 
 export function OrderModal() {
-  const { modalOpen, selectedPizza, closeOrderModal, addItem } = useOrder()
+  const { modalOpen, selectedPizza, closeOrderModal, addPizza } = useOrder()
   const [kind, setKind] = useState<OrderKind>('whole')
   const [size, setSize] = useState<PizzaSizeId>('media')
   const [secondFlavorKey, setSecondFlavorKey] = useState('')
@@ -31,7 +31,6 @@ export function OrderModal() {
 
   useEffect(() => {
     if (!modalOpen) return
-
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
@@ -48,9 +47,7 @@ export function OrderModal() {
   }, [modalOpen, selectedPizza])
 
   useEffect(() => {
-    if (kind === 'half' && !isHalfAllowedSize(size)) {
-      setSize('media')
-    }
+    if (kind === 'half' && !isHalfAllowedSize(size)) setSize('media')
   }, [kind, size])
 
   const secondFlavor = useMemo(() => {
@@ -69,9 +66,7 @@ export function OrderModal() {
     const stillValid = availableSecondFlavors.some(
       (entry) => flavorKey(entry) === secondFlavorKey
     )
-    if (!stillValid) {
-      setSecondFlavorKey(flavorKey(availableSecondFlavors[0]))
-    }
+    if (!stillValid) setSecondFlavorKey(flavorKey(availableSecondFlavors[0]))
   }, [availableSecondFlavors, secondFlavorKey, selectedPizza])
 
   const price = useMemo(() => {
@@ -83,7 +78,6 @@ export function OrderModal() {
           itemName: secondFlavor.itemName,
         }
       : undefined
-
     return calculateLinePrice(kind, selectedPizza, flavor2, size)
   }, [kind, selectedPizza, secondFlavor, size])
 
@@ -93,8 +87,7 @@ export function OrderModal() {
 
   function handleAdd() {
     if (!selectedPizza || !canAdd) return
-
-    addItem({
+    addPizza({
       kind,
       flavor1: selectedPizza,
       flavor2:
@@ -120,23 +113,21 @@ export function OrderModal() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="order-modal-title"
-        className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-[1.75rem] border border-white/10 bg-brand-950 pb-[env(safe-area-inset-bottom)] shadow-2xl sm:rounded-[1.75rem]"
+        className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-[1.75rem] border border-cream/10 bg-night pb-[env(safe-area-inset-bottom)] shadow-2xl sm:rounded-[1.75rem]"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-white/10 bg-brand-950/95 px-4 py-4 backdrop-blur-xl sm:px-5">
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-cream/10 bg-night/95 px-4 py-4 backdrop-blur-xl sm:px-5">
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">
-              Montar pedido
-            </p>
-            <h2 id="order-modal-title" className="mt-1 break-words text-lg font-semibold text-white sm:text-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Montar pizza</p>
+            <h2 id="order-modal-title" className="mt-1 break-words font-display text-xl text-cream sm:text-2xl">
               {selectedPizza.itemName}
             </h2>
-            <p className="mt-1 text-sm text-zinc-400">{selectedPizza.sectionLabel}</p>
+            <p className="mt-1 text-sm capitalize text-cream-muted">{selectedPizza.sectionLabel}</p>
           </div>
           <button
             type="button"
             onClick={closeOrderModal}
-            className="inline-flex min-h-10 shrink-0 items-center rounded-xl border border-white/10 px-3 py-2 text-sm text-zinc-400 transition hover:bg-white/5 hover:text-white"
+            className="inline-flex min-h-10 shrink-0 items-center rounded-xl border border-cream/15 px-3 py-2 text-sm text-cream-muted transition hover:bg-cream/5 hover:text-cream"
           >
             Fechar
           </button>
@@ -144,7 +135,7 @@ export function OrderModal() {
 
         <div className="space-y-6 px-5 py-5">
           <fieldset>
-            <legend className="text-sm font-semibold text-white">Tipo de pizza</legend>
+            <legend className="text-sm font-semibold text-cream">Tipo</legend>
             <div className="mt-3 grid grid-cols-2 gap-3">
               <KindButton active={kind === 'whole'} onClick={() => setKind('whole')}>
                 Inteira
@@ -154,29 +145,24 @@ export function OrderModal() {
               </KindButton>
             </div>
             {kind === 'half' ? (
-              <p className="mt-2 text-xs text-zinc-500">
-                Meia a meia disponível em Média, Grande e Família. Cobramos o valor do sabor
-                mais caro.
+              <p className="mt-2 text-xs text-cream-muted">
+                Meia a meia em Média, Grande e Família. Valor do sabor mais caro.
               </p>
             ) : null}
           </fieldset>
 
           {kind === 'half' ? (
             <label className="block">
-              <span className="text-sm font-semibold text-white">Segundo sabor</span>
+              <span className="text-sm font-semibold text-cream">Segundo sabor</span>
               <select
                 value={secondFlavorKey}
                 onChange={(event) => setSecondFlavorKey(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-accent-400/50"
+                className="mt-2 w-full rounded-xl border border-cream/15 bg-night-elevated px-4 py-3 text-sm text-cream outline-none focus:border-gold/50"
               >
                 {groupPizzasBySection(availableSecondFlavors).map((group) => (
                   <optgroup key={group.sectionId} label={group.sectionLabel}>
                     {group.items.map((entry) => (
-                      <option
-                        key={flavorKey(entry)}
-                        value={flavorKey(entry)}
-                        className="bg-brand-950 text-white"
-                      >
+                      <option key={flavorKey(entry)} value={flavorKey(entry)} className="bg-night text-cream">
                         {entry.itemName}
                       </option>
                     ))}
@@ -187,11 +173,10 @@ export function OrderModal() {
           ) : null}
 
           <fieldset>
-            <legend className="text-sm font-semibold text-white">Tamanho</legend>
+            <legend className="text-sm font-semibold text-cream">Tamanho</legend>
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {PIZZA_SIZES.map((entry) => {
                 const disabled = kind === 'half' && !entry.halfAllowed
-
                 return (
                   <button
                     key={entry.id}
@@ -200,8 +185,8 @@ export function OrderModal() {
                     onClick={() => setSize(entry.id)}
                     className={`rounded-xl border px-3 py-3 text-sm font-semibold transition ${
                       size === entry.id
-                        ? 'border-accent-400/60 bg-accent-400/15 text-accent-300'
-                        : 'border-white/10 bg-white/[0.03] text-zinc-300 hover:border-white/20'
+                        ? 'border-gold/60 bg-gold/15 text-gold'
+                        : 'border-cream/15 bg-night-elevated text-cream-muted hover:border-cream/30'
                     } ${disabled ? 'cursor-not-allowed opacity-40' : ''}`}
                   >
                     {entry.label}
@@ -212,28 +197,27 @@ export function OrderModal() {
           </fieldset>
 
           <label className="block">
-            <span className="text-sm font-semibold text-white">Observação desta pizza</span>
-            <span className="mt-1 block text-xs text-zinc-500">Opcional — ex.: sem cebola, sem milho</span>
+            <span className="text-sm font-semibold text-cream">Observação</span>
             <textarea
               value={note}
               onChange={(event) => setNote(event.target.value)}
               rows={2}
               maxLength={200}
-              placeholder="Escreva aqui se quiser..."
-              className="mt-2 w-full resize-none rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-accent-400/50"
+              placeholder="Opcional — ex.: sem cebola"
+              className="mt-2 w-full resize-none rounded-xl border border-cream/15 bg-night-elevated px-4 py-3 text-sm text-cream placeholder:text-cream-muted/50 outline-none focus:border-gold/50"
             />
           </label>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">Valor desta pizza</p>
-            <p className="mt-1 text-2xl font-semibold text-accent-400">{formatPrecoBRL(price)}</p>
+          <div className="rounded-2xl border border-cream/10 bg-cream px-4 py-4 text-night">
+            <p className="text-xs uppercase tracking-[0.16em] text-night/55">Valor</p>
+            <p className="mt-1 font-display text-3xl text-tomato">{formatPrecoBRL(price)}</p>
           </div>
 
           <button
             type="button"
             disabled={!canAdd}
             onClick={handleAdd}
-            className="inline-flex w-full items-center justify-center rounded-2xl bg-[#25D366] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#20bd5a] disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex w-full items-center justify-center rounded-2xl bg-tomato px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-tomato-dark disabled:cursor-not-allowed disabled:opacity-50"
           >
             Adicionar ao pedido
           </button>
@@ -258,8 +242,8 @@ function KindButton({
       onClick={onClick}
       className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
         active
-          ? 'border-accent-400/60 bg-accent-400/15 text-accent-300'
-          : 'border-white/10 bg-white/[0.03] text-zinc-300 hover:border-white/20'
+          ? 'border-gold/60 bg-gold/15 text-gold'
+          : 'border-cream/15 bg-night-elevated text-cream-muted hover:border-cream/30'
       }`}
     >
       {children}
@@ -268,7 +252,10 @@ function KindButton({
 }
 
 function groupPizzasBySection(catalog: PizzaCatalogEntry[]) {
-  const groups = new Map<string, { sectionId: string; sectionLabel: string; items: PizzaCatalogEntry[] }>()
+  const groups = new Map<
+    string,
+    { sectionId: string; sectionLabel: string; items: PizzaCatalogEntry[] }
+  >()
 
   for (const entry of catalog) {
     const existing = groups.get(entry.sectionId)

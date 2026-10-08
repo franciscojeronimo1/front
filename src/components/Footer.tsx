@@ -1,80 +1,66 @@
 import { WHATSAPP_DISPLAY, siteContent, whatsappHref } from '../content/siteContent'
-import { WhatsAppButton } from './WhatsAppButton'
+import { useVisitMode } from '../context/VisitModeContext'
 
 type FooterProps = {
   className?: string
 }
 
 export function Footer({ className = '' }: FooterProps) {
+  const { isLocal } = useVisitMode()
+
   return (
-    <footer className={`border-t border-white/10 bg-black/55 ${className}`}>
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:gap-12 sm:px-5 sm:py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-        <div className="space-y-6">
-          <span className="bg-gradient-to-r from-accent-400 to-amber-200 bg-clip-text text-xl font-semibold tracking-tight text-transparent">
-            {siteContent.brandName}
-          </span>
-          <p className="max-w-xl text-base text-zinc-400 sm:text-lg">{siteContent.footer.area}</p>
-          <dl className="space-y-2 text-sm text-zinc-400">
-            <div>
-              <dt className="font-semibold text-zinc-300">Localização</dt>
-              <dd>{siteContent.footer.locationLabel}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-zinc-300">Horário</dt>
-              <dd>{siteContent.footer.hours}</dd>
-            </div>
-            <div>
-              <dt className="font-semibold text-zinc-300">Contato rápido</dt>
-              <dd>
-                <a
-                  className="text-accent-400 transition hover:text-accent-500"
-                  href={whatsappHref('pedido')}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  WhatsApp {WHATSAPP_DISPLAY}
-                </a>
-              </dd>
-            </div>
-          </dl>
+    <footer id="contato" className={`border-t border-cream/10 bg-night ${className}`}>
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-5 md:grid-cols-3">
+        <div>
+          <p className="font-display text-3xl italic text-gold">{siteContent.brandName}</p>
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream-muted">
+            {isLocal
+              ? 'Cardápio digital para consultar na mesa. Seu pedido é com o garçom.'
+              : siteContent.footer.area}
+          </p>
         </div>
-        <div className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-          <p className="text-lg font-medium text-white">
-            Pizza e esfiha em Santana do Jacaré
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cream-muted">
+            Atendimento
           </p>
-          <p className="text-sm text-zinc-400">
-            Escolha pizza, combos de esfiha ou 10 sabores à escolha e envie pelo WhatsApp.
+          <p className="mt-3 text-cream">{siteContent.footer.hours}</p>
+          <p className="mt-1 text-sm text-cream-muted">{siteContent.footer.esfihasNote}</p>
+          <p className="mt-3 text-sm text-cream-muted">{siteContent.footer.locationLabel}</p>
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cream-muted">
+            {isLocal ? 'Dúvidas' : 'Pedidos'}
           </p>
-          <WhatsAppButton className="w-full justify-center md:w-fit">
-            Falar agora com a Claudia Delivery
-          </WhatsAppButton>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-zinc-500">
+          {isLocal ? (
+            <p className="mt-3 text-sm leading-relaxed text-cream-muted">
+              Chame o garçom na mesa.
+            </p>
+          ) : (
             <a
-              href={siteContent.footer.instagramHref}
-              className="inline-flex min-h-10 items-center text-zinc-300 transition hover:text-white"
+              href={whatsappHref('pedido')}
               target="_blank"
               rel="noreferrer"
+              className="mt-3 block font-display text-2xl text-gold transition hover:text-gold-soft"
             >
-              {siteContent.footer.instagramLabel}
+              {WHATSAPP_DISPLAY}
             </a>
-            <span>
-              © {new Date().getFullYear()} {siteContent.brandName}
-            </span>
-          </div>
+          )}
+          <a
+            href={siteContent.footer.instagramHref}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-3 inline-flex min-h-10 items-center text-sm text-cream-muted transition hover:text-cream"
+          >
+            {siteContent.footer.instagramLabel}
+          </a>
         </div>
       </div>
 
-      <div className="border-t border-white/5">
-        <p className="mx-auto max-w-6xl px-5 py-4 text-center text-xs text-zinc-600">
-          Feito por{' '}
-          <a
-            href="https://www.instagram.com/franciscojeronimo0/"
-            target="_blank"
-            rel="noreferrer"
-            className="text-zinc-500 transition hover:text-zinc-300"
-          >
-            Francisco Jerônimo
-          </a>
+      <div className="border-t border-cream/5">
+        <p className="mx-auto max-w-6xl px-4 py-4 text-center text-xs text-cream-muted/60 sm:px-5">
+          © {new Date().getFullYear()} {siteContent.brandName}
         </p>
       </div>
     </footer>

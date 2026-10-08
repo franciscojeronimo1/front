@@ -11,6 +11,8 @@ export type CardapioItem = {
   /** Quando a linha de preço é específica do sabor (ex.: Queijos). */
   prices?: SizePrices
   note?: string
+  /** Sabor lançado recentemente (selo "Novo" e filtro Novidades). */
+  novo?: boolean
 }
 
 export type CardapioSecao = {
@@ -37,7 +39,7 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
   {
     id: 'bacon-alho',
     subtitulo: 'bacon/alho',
-    faixaPreco: [45, 53, 60, 75],
+    faixaPreco: [45, 55, 65, 80],
     itens: [
       {
         name: 'PORTUGUESA COMPLETA',
@@ -72,37 +74,37 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
       {
         name: '2 QUEIJOS',
         ingredients: 'Molho vermelho, muçarela e provolone.',
-        prices: [38, 43, 48, 58],
+        prices: [40, 45, 50, 60],
       },
       {
         name: '3 QUEIJOS',
         ingredients: 'Molho vermelho, muçarela, provolone e parmesão.',
-        prices: [40, 45, 50, 63],
+        prices: [45, 50, 55, 70],
       },
       {
         name: '4 QUEIJOS',
         ingredients:
           'Molho vermelho, muçarela, provolone, parmesão e catupiry.',
-        prices: [43, 50, 58, 73],
+        prices: [48, 55, 63, 78],
       },
       {
         name: '5 QUEIJOS',
         ingredients:
           'Molho vermelho, muçarela, provolone, parmesão, catupiry e cheddar.',
-        prices: [45, 55, 63, 78],
+        prices: [50, 60, 68, 83],
       },
       {
         name: '6 QUEIJOS',
         ingredients:
           'Molho vermelho, muçarela, provolone, parmesão, catupiry, cheddar, queijo prato e creme de queijo.',
-        prices: [50, 60, 70, 85],
+        prices: [55, 60, 75, 90],
       },
     ],
   },
   {
     id: 'carnes',
     subtitulo: 'carnes',
-    faixaPreco: [50, 65, 70, 95],
+    faixaPreco: [50, 65, 80, 95],
     itens: [
       {
         name: 'COSTELA',
@@ -114,12 +116,18 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
         ingredients:
           'Molho vermelho, muçarela, parmesão, especiarias, creme de queijo e camarão.',
       },
+      {
+        name: 'RALADÃO',
+        ingredients:
+          'Molho vermelho, muçarela, muita calabresa ralada e cola opcional.',
+        novo: true,
+      },
     ],
   },
   {
     id: 'tradicionais',
     subtitulo: 'tradicionais',
-    faixaPreco: [45, 50, 55, 70],
+    faixaPreco: [45, 55, 60, 75],
     itens: [
       {
         name: 'MUÇARELA',
@@ -148,12 +156,24 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
         ingredients:
           'Molho vermelho, muçarela, presunto, frango, milho e calabresa.',
       },
+      {
+        name: 'TROPICAL',
+        ingredients:
+          'Molho vermelho, muçarela, lombinho, abacaxi e cream cheese.',
+        novo: true,
+      },
+      {
+        name: 'VINAGRETE',
+        ingredients:
+          'Molho vermelho, muçarela, tomate picado, cebola picada, milho e azeitona.',
+        novo: true,
+      },
     ],
   },
   {
     id: 'vegetarianas',
     subtitulo: 'vegetarianas',
-    faixaPreco: [40, 48, 58, 70],
+    faixaPreco: [40, 50, 60, 75],
     itens: [
       {
         name: 'VEGANA',

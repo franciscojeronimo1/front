@@ -1,24 +1,22 @@
 import { OrderProvider, useOrder } from './context/OrderContext'
-import { FloatingWhatsApp } from './components/FloatingWhatsApp'
-import { FeaturedPizzas } from './components/FeaturedPizzas'
+import { VisitModeProvider, useVisitMode } from './context/VisitModeContext'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
-import { HowToOrder } from './components/HowToOrder'
-import { LocalSeoContent } from './components/LocalSeoContent'
-import { MenuCardapio } from './components/MenuCardapio'
-import { MenuEsfihas } from './components/MenuEsfihas'
+import { MenuDigital } from './components/MenuDigital'
 import { OrderCartBar } from './components/OrderCartBar'
 import { OrderModal } from './components/OrderModal'
 import { SeoJsonLd } from './components/SeoJsonLd'
-import { TrustBar } from './components/TrustBar'
 
 function AppContent() {
+  const { isLocal } = useVisitMode()
   const { itemCount } = useOrder()
   const bottomPad =
-    itemCount > 0
-      ? 'pb-[calc(8.5rem+env(safe-area-inset-bottom))]'
-      : 'pb-[calc(5.5rem+env(safe-area-inset-bottom))]'
+    !isLocal && itemCount > 0
+      ? 'pb-[calc(6rem+env(safe-area-inset-bottom))] sm:pb-8'
+      : isLocal
+        ? 'pb-[calc(5rem+env(safe-area-inset-bottom))]'
+        : 'pb-8'
 
   return (
     <>
@@ -26,25 +24,31 @@ function AppContent() {
       <Header />
       <main>
         <Hero />
-        <TrustBar />
-        <HowToOrder />
-        <FeaturedPizzas />
-        <MenuEsfihas />
-        <MenuCardapio />
-        <LocalSeoContent />
+        <MenuDigital />
       </main>
       <Footer className={bottomPad} />
-      <OrderModal />
-      <OrderCartBar />
-      <FloatingWhatsApp />
+      {!isLocal ? (
+        <>
+          <OrderModal />
+          <OrderCartBar />
+        </>
+      ) : (
+        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-cream/15 bg-night/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-center backdrop-blur-xl">
+          <p className="text-sm font-medium text-cream">
+            Escolheu? <span className="text-gold">Peça ao garçom</span> na sua mesa.
+          </p>
+        </div>
+      )}
     </>
   )
 }
 
 export default function App() {
   return (
-    <OrderProvider>
-      <AppContent />
-    </OrderProvider>
+    <VisitModeProvider>
+      <OrderProvider>
+        <AppContent />
+      </OrderProvider>
+    </VisitModeProvider>
   )
 }

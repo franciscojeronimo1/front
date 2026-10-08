@@ -14,7 +14,7 @@ import {
   type PizzaSizeId,
 } from '../content/pizzaSizes'
 import { WHATSAPP_PHONE_E164 } from '../content/siteContent'
-import type { OrderLineItem, PizzaRef } from '../types/order'
+import type { OrderLineItem, PizzaOrderLine, PizzaRef, SimpleOrderLine } from '../types/order'
 import { calculateLinePrice } from '../utils/pizzaPricing'
 
 type OrderContextValue = {
@@ -28,8 +28,17 @@ type OrderContextValue = {
   openOrderModal: (pizza: PizzaRef) => void
   closeOrderModal: () => void
   setCartOpen: (open: boolean) => void
+  toggleCart: () => void
   setOrderNote: (note: string) => void
-  addItem: (item: Omit<OrderLineItem, 'id' | 'price'> & { price?: number }) => void
+  addPizza: (item: Omit<PizzaOrderLine, 'id' | 'price' | 'type' | 'quantity'> & { quantity?: number }) => void
+  addSimple: (item: {
+    productId: string
+    name: string
+    description?: string
+    unitPrice: number
+    quantity?: number
+  }) => void
+  updateQuantity: (id: string, quantity: number) => void
   removeItem: (id: string) => void
   clearCart: () => void
   whatsappCheckoutHref: string
@@ -37,17 +46,23 @@ type OrderContextValue = {
 
 const OrderContext = createContext<OrderContextValue | null>(null)
 
-function formatLineDescription(item: OrderLineItem): string {
+export function formatLineDescription(item: OrderLineItem): string {
+  if (item.type === 'simple') {
+    const qty = item.quantity > 1 ? `${item.quantity}x ` : ''
+    return `${qty}${item.name}${item.description ? ` — ${item.description}` : ''}`
+  }
+
   const size = pizzaSizeLabel(item.size)
+  const qty = item.quantity > 1 ? `${item.quantity}x ` : ''
 
   if (item.kind === 'whole') {
-    return `Pizza inteira *${item.flavor1.itemName}* (${item.flavor1.sectionLabel}) — ${size}`
+    return `${qty}Pizza inteira *${item.flavor1.itemName}* (${item.flavor1.sectionLabel}) — ${size}`
   }
 
   const second = item.flavor2
-  if (!second) return `Pizza meia a meia — ${size}`
+  if (!second) return `${qty}Pizza meia a meia — ${size}`
 
-  return `Pizza meia a meia *${item.flavor1.itemName}* (${item.flavor1.sectionLabel}) + *${second.itemName}* (${second.sectionLabel}) — ${size}`
+  return `${qty}Pizza meia a meia *${item.flavor1.itemName}* (${item.flavor1.sectionLabel}) + *${second.itemName}* (${second.sectionLabel}) — ${size}`
 }
 
 function buildWhatsAppMessage(
@@ -70,9 +85,17 @@ function buildWhatsAppMessage(
     'Endereço e forma de pagamento envio na sequência.',
   ]
 
-  return ['Olá! Vim pelo site da Claudia Delivery e quero fazer um pedido:', '', ...lines, ...footer].join(
-    '\n'
-  )
+  return [
+    'Olá! Vim pelo site da Claudia Delivery e quero fazer um pedido:',
+    '',
+    ...lines,
+    ...footer,
+  ].join('\n')
+}
+
+function lineUnitPrice(item: OrderLineItem): number {
+  if (item.type === 'simple') return item.unitPrice
+  return item.price / Math.max(item.quantity, 1)
 }
 
 export function OrderProvider({ children }: { children: ReactNode }) {
@@ -87,6 +110,11 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     [items]
   )
 
+  const itemCount = useMemo(
+    () => items.reduce((sum, item) => sum + item.quantity, 0),
+    [items]
+  )
+
   const openOrderModal = useCallback((pizza: PizzaRef) => {
     setSelectedPizza(pizza)
     setModalOpen(true)
@@ -97,18 +125,32 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     setSelectedPizza(null)
   }, [])
 
-  const addItem = useCallback(
-    (draft: Omit<OrderLineItem, 'id' | 'price'> & { price?: number }) => {
-      const price =
-        draft.price ??
-        calculateLinePrice(draft.kind, draft.flavor1, draft.flavor2, draft.size)
+  const toggleCart = useCallback(() => {
+    setCartOpen((open) => !open)
+  }, [])
+
+  const addPizza = useCallback(
+    (
+      draft: Omit<PizzaOrderLine, 'id' | 'price' | 'type' | 'quantity'> & {
+        quantity?: number
+      }
+    ) => {
+      const quantity = draft.quantity ?? 1
+      const unit = calculateLinePrice(
+        draft.kind,
+        draft.flavor1,
+        draft.flavor2,
+        draft.size
+      )
 
       setItems((current) => [
         ...current,
         {
           ...draft,
+          type: 'pizza',
           id: crypto.randomUUID(),
-          price,
+          quantity,
+          price: unit * quantity,
         },
       ])
       setCartOpen(true)
@@ -116,6 +158,66 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     },
     [closeOrderModal]
   )
+
+  const addSimple = useCallback(
+    (draft: {
+      productId: string
+      name: string
+      description?: string
+      unitPrice: number
+      quantity?: number
+    }) => {
+      const quantity = draft.quantity ?? 1
+      setItems((current) => {
+        const existing = current.find(
+          (item): item is SimpleOrderLine =>
+            item.type === 'simple' && item.productId === draft.productId
+        )
+        if (existing) {
+          return current.map((item) => {
+            if (item.id !== existing.id || item.type !== 'simple') return item
+            const nextQty = item.quantity + quantity
+            return {
+              ...item,
+              quantity: nextQty,
+              price: item.unitPrice * nextQty,
+            }
+          })
+        }
+
+        return [
+          ...current,
+          {
+            type: 'simple' as const,
+            id: crypto.randomUUID(),
+            productId: draft.productId,
+            name: draft.name,
+            description: draft.description,
+            unitPrice: draft.unitPrice,
+            quantity,
+            price: draft.unitPrice * quantity,
+          },
+        ]
+      })
+      setCartOpen(true)
+    },
+    []
+  )
+
+  const updateQuantity = useCallback((id: string, quantity: number) => {
+    if (quantity <= 0) {
+      setItems((current) => current.filter((item) => item.id !== id))
+      return
+    }
+
+    setItems((current) =>
+      current.map((item) => {
+        if (item.id !== id) return item
+        const unit = lineUnitPrice(item)
+        return { ...item, quantity, price: unit * quantity }
+      })
+    )
+  }, [])
 
   const removeItem = useCallback((id: string) => {
     setItems((current) => current.filter((item) => item.id !== id))
@@ -140,12 +242,15 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       cartOpen,
       orderNote,
       total,
-      itemCount: items.length,
+      itemCount,
       openOrderModal,
       closeOrderModal,
       setCartOpen,
+      toggleCart,
       setOrderNote,
-      addItem,
+      addPizza,
+      addSimple,
+      updateQuantity,
       removeItem,
       clearCart,
       whatsappCheckoutHref,
@@ -157,9 +262,13 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       cartOpen,
       orderNote,
       total,
+      itemCount,
       openOrderModal,
       closeOrderModal,
-      addItem,
+      toggleCart,
+      addPizza,
+      addSimple,
+      updateQuantity,
       removeItem,
       clearCart,
       whatsappCheckoutHref,
@@ -177,5 +286,5 @@ export function useOrder() {
   return context
 }
 
-export { formatLineDescription, isHalfAllowedSize, defaultSizeForKind }
+export { isHalfAllowedSize, defaultSizeForKind }
 export type { PizzaSizeId }

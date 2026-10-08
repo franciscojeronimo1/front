@@ -1,63 +1,71 @@
-import { siteContent, whatsappHref } from '../content/siteContent'
-import { OpenStatusBadge } from './OpenStatusBadge'
+import { siteContent } from '../content/siteContent'
+import { useVisitMode } from '../context/VisitModeContext'
+import { useOrder } from '../context/OrderContext'
 
 export function Header() {
+  const { isLocal } = useVisitMode()
+  const { itemCount, toggleCart, setCartOpen } = useOrder()
+
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-brand-950/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-5 sm:py-4">
-        <a
-          href="/"
-          className="group flex min-w-0 flex-1 flex-col gap-0.5"
-          aria-label="Claudia Delivery — início"
-        >
-          <span className="block truncate bg-gradient-to-r from-accent-400 to-amber-200 bg-clip-text text-base font-semibold tracking-tight text-transparent sm:text-xl">
+    <header className="sticky top-0 z-40 border-b border-cream/10 bg-night/90 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-5">
+        <a href={isLocal ? '/?local=1' : '/'} className="min-w-0" aria-label={`${siteContent.brandName} — início`}>
+          <span className="block font-display text-xl italic text-gold sm:text-2xl">
             {siteContent.brandName}
           </span>
-          <span className="hidden text-xs font-medium uppercase tracking-[0.16em] text-zinc-500 sm:block sm:tracking-[0.2em]">
-            Pizza e esfiha · Santana do Jacaré
+          <span className="mt-0.5 block text-[0.65rem] font-medium uppercase tracking-[0.18em] text-cream-muted">
+            {isLocal ? 'Cardápio na mesa' : siteContent.locationShort}
           </span>
         </a>
 
-        <nav className="flex shrink-0 items-center gap-1 sm:gap-4">
-          <OpenStatusBadge className="hidden lg:inline-flex" showHoursWhenClosed={false} />
-          <a
-            href="#esfihas"
-            className="inline-flex min-h-10 items-center rounded-lg px-2 text-sm font-medium text-zinc-300 transition hover:text-white"
-          >
+        <nav className="hidden items-center gap-6 md:flex">
+          <a href="#cardapio" className="text-sm font-medium text-cream/90 transition hover:text-cream">
+            Pizzas
+          </a>
+          <a href="#esfihas" className="text-sm font-medium text-cream/90 transition hover:text-cream">
             Esfihas
           </a>
+          {!isLocal ? (
+            <a href="#contato" className="text-sm font-medium text-cream/90 transition hover:text-cream">
+              Contato
+            </a>
+          ) : null}
+        </nav>
+
+        {isLocal ? (
           <a
             href="#cardapio"
-            className="inline-flex min-h-10 items-center rounded-lg px-2 text-sm font-medium text-zinc-300 transition hover:text-white"
+            className="inline-flex min-h-11 items-center rounded-full border border-cream/25 px-4 py-2 text-sm font-semibold text-cream transition hover:border-cream/50"
           >
             Cardápio
           </a>
-          <a
-            href="#faq-local"
-            className="hidden min-h-10 items-center rounded-lg px-2 text-sm font-medium text-zinc-300 transition hover:text-white md:inline-flex"
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              if (itemCount === 0) setCartOpen(true)
+              else toggleCart()
+            }}
+            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-tomato px-4 py-2 text-sm font-semibold text-white transition hover:bg-tomato-dark"
+            aria-label={`Pedido com ${itemCount} itens`}
           >
-            FAQ
-          </a>
-          <a
-            href={whatsappHref('pedido')}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Falar no WhatsApp"
-            className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl bg-[#25D366] text-white transition hover:bg-[#20bd5a] sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm sm:font-semibold"
-          >
-            <WhatsAppGlyph className="h-5 w-5" />
-            <span className="hidden sm:inline">Falar no WhatsApp</span>
-          </a>
-        </nav>
+            <BagIcon />
+            <span className="hidden sm:inline">Pedido</span>
+            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1.5 text-xs font-bold text-tomato">
+              {itemCount}
+            </span>
+          </button>
+        )}
       </div>
     </header>
   )
 }
 
-function WhatsAppGlyph({ className }: { className?: string }) {
+function BagIcon() {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.032-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.883 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <path d="M6 7h12l-1 13H7L6 7z" strokeLinejoin="round" />
+      <path d="M9 7a3 3 0 0 1 6 0" strokeLinecap="round" />
     </svg>
   )
 }

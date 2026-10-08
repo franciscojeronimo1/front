@@ -1,18 +1,17 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
-  --font-display:
-    'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-script: 'Dancing Script', cursive;
-  --font-menu-serif:
-    'Source Serif 4', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
 
-  --color-brand-950: oklch(0.145 0.02 30);
-  --color-brand-900: oklch(0.2 0.03 30);
-  --color-brand-800: oklch(0.26 0.035 35);
-  --color-accent-400: oklch(0.83 0.16 76);
-  --color-accent-500: oklch(0.77 0.18 54);
+  --color-night: #171311;
+  --color-night-elevated: #1f1a17;
+  --color-cream: #f4e8d8;
+  --color-cream-muted: #d9cbb8;
+  --color-tomato: #e04b32;
+  --color-tomato-dark: #c43d28;
+  --color-gold: #d9a441;
+  --color-gold-soft: #e8c56a;
 }
 
 html {
@@ -25,14 +24,33 @@ body {
 }
 
 body {
+  background-color: var(--color-night);
+  color: var(--color-cream);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+}
+
+button,
+[role='button'],
+a,
+summary,
+input[type='button'],
+input[type='submit'],
+input[type='reset'],
+label[for] {
+  cursor: pointer;
+}
+
+button:disabled,
+a[aria-disabled='true'],
+input:disabled {
+  cursor: not-allowed;
 }
 
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -41,7 +59,7 @@ body {
 }
 
 .animate-rise {
-  animation: rise-in 0.65s ease-out both;
+  animation: rise-in 0.55s ease-out both;
 }
 
 @keyframes ar-spin {
@@ -53,8 +71,8 @@ body {
 .ar-spinner {
   width: 2.25rem;
   height: 2.25rem;
-  border: 2px solid rgb(255 255 255 / 0.12);
-  border-top-color: var(--color-accent-400);
+  border: 2px solid rgb(244 232 216 / 0.15);
+  border-top-color: var(--color-gold);
   border-radius: 9999px;
   animation: ar-spin 0.75s linear infinite;
 }
@@ -66,7 +84,14 @@ body {
 
   .ar-spinner {
     animation: none;
-    border-top-color: var(--color-accent-400);
     opacity: 0.7;
   }
+}
+
+/* Esconde scrollbar feia nos chips de filtro, mantém scroll. */
+.chips-scroll {
+  scrollbar-width: none;
+}
+.chips-scroll::-webkit-scrollbar {
+  display: none;
 }
