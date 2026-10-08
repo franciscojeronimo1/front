@@ -157,7 +157,7 @@ export function OrderModal() {
               <select
                 value={secondFlavorKey}
                 onChange={(event) => setSecondFlavorKey(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-cream/15 bg-night-elevated px-4 py-3 text-sm text-cream outline-none focus:border-gold/50"
+                className="mt-2 w-full rounded-xl border border-cream/15 bg-night-elevated px-4 py-3 text-base text-cream outline-none focus:border-gold/50 sm:text-sm"
               >
                 {groupPizzasBySection(availableSecondFlavors).map((group) => (
                   <optgroup key={group.sectionId} label={group.sectionLabel}>
@@ -204,7 +204,7 @@ export function OrderModal() {
               rows={2}
               maxLength={200}
               placeholder="Opcional — ex.: sem cebola"
-              className="mt-2 w-full resize-none rounded-xl border border-cream/15 bg-night-elevated px-4 py-3 text-sm text-cream placeholder:text-cream-muted/50 outline-none focus:border-gold/50"
+              className="mt-2 w-full resize-none rounded-xl border border-cream/15 bg-night-elevated px-4 py-3 text-base text-cream placeholder:text-cream-muted/50 outline-none focus:border-gold/50 sm:text-sm"
             />
           </label>
 

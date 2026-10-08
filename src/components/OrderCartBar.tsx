@@ -81,7 +81,7 @@ export function OrderCartBar() {
           <button
             type="button"
             onClick={() => setCartOpen(!cartOpen)}
-            className="rounded-full border border-night/15 px-3 py-1.5 text-sm text-night/70"
+            className="inline-flex min-h-10 items-center rounded-full border border-night/15 px-4 text-sm text-night/70"
           >
             {cartOpen ? 'Fechar' : 'Abrir'}
           </button>
@@ -105,7 +105,7 @@ export function OrderCartBar() {
                       <div className="mt-2 flex items-center gap-2">
                         <button
                           type="button"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-night/15 text-sm"
+                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-night/15 text-base"
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           aria-label="Diminuir quantidade"
                         >
@@ -114,7 +114,7 @@ export function OrderCartBar() {
                         <span className="min-w-6 text-center text-sm font-semibold">{item.quantity}</span>
                         <button
                           type="button"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-night/15 text-sm"
+                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-night/15 text-base"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           aria-label="Aumentar quantidade"
                         >
@@ -123,7 +123,7 @@ export function OrderCartBar() {
                         <button
                           type="button"
                           onClick={() => removeItem(item.id)}
-                          className="ml-auto text-xs font-semibold uppercase tracking-wide text-night/45 hover:text-tomato"
+                          className="-mr-2 ml-auto inline-flex min-h-10 items-center px-2 text-xs font-semibold uppercase tracking-wide text-night/45 hover:text-tomato"
                         >
                           Remover
                         </button>
@@ -234,7 +234,7 @@ export function OrderCartBar() {
                     rows={2}
                     maxLength={300}
                     placeholder="Ex.: sem cebola, campainha não funciona..."
-                    className="mt-2 w-full resize-none rounded-xl border border-night/15 bg-white px-3 py-2 text-sm text-night outline-none focus:border-tomato/50"
+                    className="mt-2 w-full resize-none rounded-xl border border-night/15 bg-white px-3 py-2 text-base text-night outline-none focus:border-tomato/50 sm:text-sm"
                   />
                 </label>
               </div>

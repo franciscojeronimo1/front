@@ -215,7 +215,7 @@ export function MenuDigital() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={siteContent.cardapio.searchPlaceholder}
-              className="w-full rounded-2xl border border-cream/15 bg-night-elevated py-3.5 pl-11 pr-4 text-sm text-cream outline-none placeholder:text-cream-muted/70 focus:border-gold/50"
+              className="w-full rounded-2xl border border-cream/15 bg-night-elevated py-3.5 pl-11 pr-4 text-base text-cream outline-none placeholder:text-cream-muted/70 focus:border-gold/50 sm:text-sm"
             />
           </label>
         </div>
@@ -254,10 +254,7 @@ export function MenuDigital() {
         <div id="esfihas" className="mt-10 grid gap-0 sm:grid-cols-2">
           {filtered.map((row) => {
             const show3d = row.kind === 'pizza' && has3dModel(row.name)
-            const priceLabel =
-              row.kind === 'pizza'
-                ? `a partir de ${formatPrecoBRL(row.startingPrice)}`
-                : formatPrecoBRL(row.price)
+            const priceLabel = formatPrecoBRL(row.kind === 'pizza' ? row.startingPrice : row.price)
 
             return (
               <article
@@ -276,26 +273,29 @@ export function MenuDigital() {
                   }}
                 />
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-display text-lg leading-tight text-cream sm:text-xl">
-                      {row.name}
-                      {row.kind === 'pizza' && row.item.novo ? (
-                        <span className="ml-2 inline-block rounded-full bg-tomato px-2 py-0.5 align-middle font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-cream">
-                          Novo
-                        </span>
-                      ) : null}
-                    </h3>
-                    <p className="shrink-0 text-sm font-semibold text-gold">{priceLabel}</p>
-                  </div>
+                  <h3 className="font-display text-lg leading-tight text-cream sm:text-xl">
+                    {row.name}
+                    {row.kind === 'pizza' && row.item.novo ? (
+                      <span className="ml-2 inline-block rounded-full bg-tomato px-2 py-0.5 align-middle font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-cream">
+                        Novo
+                      </span>
+                    ) : null}
+                  </h3>
                   <p className="mt-1 line-clamp-2 text-sm text-cream-muted">{row.description}</p>
-                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <p className="mr-auto text-sm font-semibold leading-tight text-gold">
+                      {row.kind === 'pizza' ? (
+                        <span className="block text-[11px] font-medium text-cream-muted">a partir de</span>
+                      ) : null}
+                      {priceLabel}
+                    </p>
                     {show3d ? (
                       <button
                         type="button"
                         onPointerEnter={() => void loadModelViewer().catch(() => {})}
                         onTouchStart={() => void loadModelViewer().catch(() => {})}
                         onClick={() => setArOpen(true)}
-                        className="text-xs font-semibold uppercase tracking-[0.12em] text-gold transition hover:text-gold-soft"
+                        className="inline-flex min-h-10 items-center rounded-full border border-gold/40 px-3 text-xs sm:px-4 font-semibold uppercase tracking-[0.12em] text-gold transition hover:border-gold hover:text-gold-soft"
                       >
                         Ver
                       </button>
@@ -319,7 +319,7 @@ export function MenuDigital() {
                             unitPrice: row.price,
                           })
                         }}
-                        className="text-xs font-bold uppercase tracking-[0.14em] text-tomato transition hover:text-tomato-dark"
+                        className="inline-flex min-h-10 items-center rounded-full bg-tomato px-3.5 text-xs font-bold uppercase tracking-[0.08em] sm:px-4 sm:tracking-[0.12em] text-white transition hover:bg-tomato-dark active:scale-95"
                       >
                         Adicionar +
                       </button>
