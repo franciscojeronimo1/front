@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -14,7 +15,15 @@ import {
   type PizzaSizeId,
 } from '../content/pizzaSizes'
 import { WHATSAPP_PHONE_E164 } from '../content/siteContent'
-import type { OrderLineItem, PizzaOrderLine, PizzaRef, SimpleOrderLine } from '../types/order'
+import type {
+  CheckoutField,
+  CheckoutInfo,
+  OrderLineItem,
+  PaymentMethod,
+  PizzaOrderLine,
+  PizzaRef,
+  SimpleOrderLine,
+} from '../types/order'
 import { calculateLinePrice } from '../utils/pizzaPricing'
 
 type OrderContextValue = {
@@ -41,7 +50,41 @@ type OrderContextValue = {
   updateQuantity: (id: string, quantity: number) => void
   removeItem: (id: string) => void
   clearCart: () => void
+  checkout: CheckoutInfo
+  updateCheckout: (patch: Partial<CheckoutInfo>) => void
+  missingCheckoutFields: CheckoutField[]
   whatsappCheckoutHref: string
+}
+
+export const paymentLabels: Record<PaymentMethod, string> = {
+  pix: 'Pix',
+  cartao: 'Cartão',
+  dinheiro: 'Dinheiro',
+}
+
+const emptyCheckout: CheckoutInfo = {
+  name: '',
+  fulfillment: 'entrega',
+  street: '',
+  neighborhood: '',
+  reference: '',
+  payment: '',
+  changeFor: '',
+}
+
+export function getMissingCheckoutFields(checkout: CheckoutInfo): CheckoutField[] {
+  const missing: CheckoutField[] = []
+  if (!checkout.name.trim()) missing.push('name')
+  if (checkout.fulfillment === 'entrega') {
+    if (!checkout.street.trim()) missing.push('street')
+  }
+  if (!checkout.payment) missing.push('payment')
+  return missing
+}
+
+function parseChangeFor(value: string): number | null {
+  const n = Number(value.replace(/[^\d,.]/g, '').replace(',', '.'))
+  return Number.isFinite(n) && n > 0 ? n : null
 }
 
 const OrderContext = createContext<OrderContextValue | null>(null)
@@ -65,10 +108,37 @@ export function formatLineDescription(item: OrderLineItem): string {
   return `${qty}Pizza meia a meia *${item.flavor1.itemName}* (${item.flavor1.sectionLabel}) + *${second.itemName}* (${second.sectionLabel}) — ${size}`
 }
 
+function buildCheckoutLines(checkout: CheckoutInfo, total: number): string[] {
+  const lines = [`*Nome:* ${checkout.name.trim()}`]
+
+  if (checkout.fulfillment === 'retirada') {
+    lines.push('*Retirada no local*')
+  } else {
+    const neighborhood = checkout.neighborhood.trim()
+    lines.push(`*Entrega:* ${checkout.street.trim()}${neighborhood ? ` — ${neighborhood}` : ''}`)
+    const reference = checkout.reference.trim()
+    if (reference) lines.push(`*Referência:* ${reference}`)
+  }
+
+  if (checkout.payment === 'dinheiro') {
+    const changeFor = parseChangeFor(checkout.changeFor)
+    lines.push(
+      changeFor && changeFor > total
+        ? `*Pagamento:* Dinheiro (troco para ${formatPrecoBRL(changeFor)})`
+        : '*Pagamento:* Dinheiro (sem troco)'
+    )
+  } else if (checkout.payment) {
+    lines.push(`*Pagamento:* ${paymentLabels[checkout.payment]}`)
+  }
+
+  return lines
+}
+
 function buildWhatsAppMessage(
   items: OrderLineItem[],
   total: number,
-  orderNote: string
+  orderNote: string,
+  checkout: CheckoutInfo
 ): string {
   const lines = items.flatMap((item, index) => {
     const base = `${index + 1}. ${formatLineDescription(item)} — ${formatPrecoBRL(item.price)}`
@@ -77,19 +147,16 @@ function buildWhatsAppMessage(
   })
 
   const generalNote = orderNote.trim()
-  const footer = [
-    '',
-    `*Total estimado: ${formatPrecoBRL(total)}*`,
-    ...(generalNote ? ['', `*Observações do pedido:* ${generalNote}`] : []),
-    '',
-    'Endereço e forma de pagamento envio na sequência.',
-  ]
 
   return [
     'Olá! Vim pelo site da Claudia Delivery e quero fazer um pedido:',
     '',
     ...lines,
-    ...footer,
+    '',
+    `*Total: ${formatPrecoBRL(total)}*`,
+    '',
+    ...buildCheckoutLines(checkout, total),
+    ...(generalNote ? ['', `*Observações:* ${generalNote}`] : []),
   ].join('\n')
 }
 
@@ -98,12 +165,90 @@ function lineUnitPrice(item: OrderLineItem): number {
   return item.price / Math.max(item.quantity, 1)
 }
 
+const CART_STORAGE_KEY = 'claudia-delivery:pedido'
+/** Carrinhos antigos são descartados para não reaproveitar preços desatualizados. */
+const CART_MAX_AGE_MS = 12 * 60 * 60 * 1000
+
+type StoredCart = { items: OrderLineItem[]; orderNote: string; savedAt: number }
+
+function loadStoredCart(): StoredCart | null {
+  try {
+    const raw = window.localStorage.getItem(CART_STORAGE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<StoredCart>
+    if (!Array.isArray(parsed.items) || typeof parsed.savedAt !== 'number') return null
+    if (Date.now() - parsed.savedAt > CART_MAX_AGE_MS) {
+      window.localStorage.removeItem(CART_STORAGE_KEY)
+      return null
+    }
+    return {
+      items: parsed.items,
+      orderNote: typeof parsed.orderNote === 'string' ? parsed.orderNote : '',
+      savedAt: parsed.savedAt,
+    }
+  } catch {
+    return null
+  }
+}
+
+function saveStoredCart(items: OrderLineItem[], orderNote: string) {
+  try {
+    if (items.length === 0 && !orderNote.trim()) {
+      window.localStorage.removeItem(CART_STORAGE_KEY)
+      return
+    }
+    const data: StoredCart = { items, orderNote, savedAt: Date.now() }
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(data))
+  } catch {
+    // Modo privado ou armazenamento cheio: o carrinho segue só na memória.
+  }
+}
+
+const CHECKOUT_STORAGE_KEY = 'claudia-delivery:cliente'
+
+function loadStoredCheckout(): CheckoutInfo {
+  try {
+    const raw = window.localStorage.getItem(CHECKOUT_STORAGE_KEY)
+    if (!raw) return emptyCheckout
+    const parsed = JSON.parse(raw) as Partial<CheckoutInfo>
+    const merged = { ...emptyCheckout, ...parsed }
+    return {
+      ...merged,
+      fulfillment: merged.fulfillment === 'retirada' ? 'retirada' : 'entrega',
+      payment: merged.payment && merged.payment in paymentLabels ? merged.payment : '',
+    }
+  } catch {
+    return emptyCheckout
+  }
+}
+
 export function OrderProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<OrderLineItem[]>([])
+  const [storedCart] = useState(loadStoredCart)
+  const [items, setItems] = useState<OrderLineItem[]>(() => storedCart?.items ?? [])
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedPizza, setSelectedPizza] = useState<PizzaRef | null>(null)
   const [cartOpen, setCartOpen] = useState(false)
-  const [orderNote, setOrderNote] = useState('')
+  const [orderNote, setOrderNote] = useState(() => storedCart?.orderNote ?? '')
+
+  const [checkout, setCheckout] = useState<CheckoutInfo>(loadStoredCheckout)
+
+  useEffect(() => {
+    saveStoredCart(items, orderNote)
+  }, [items, orderNote])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(CHECKOUT_STORAGE_KEY, JSON.stringify(checkout))
+    } catch {
+      // Sem armazenamento disponível: os dados valem só nesta visita.
+    }
+  }, [checkout])
+
+  const updateCheckout = useCallback((patch: Partial<CheckoutInfo>) => {
+    setCheckout((current) => ({ ...current, ...patch }))
+  }, [])
+
+  const missingCheckoutFields = useMemo(() => getMissingCheckoutFields(checkout), [checkout])
 
   const total = useMemo(
     () => items.reduce((sum, item) => sum + item.price, 0),
@@ -230,9 +375,9 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const whatsappCheckoutHref = useMemo(() => {
-    const text = buildWhatsAppMessage(items, total, orderNote)
+    const text = buildWhatsAppMessage(items, total, orderNote, checkout)
     return `https://wa.me/${WHATSAPP_PHONE_E164}?${new URLSearchParams({ text })}`
-  }, [items, total, orderNote])
+  }, [items, total, orderNote, checkout])
 
   const value = useMemo(
     () => ({
@@ -253,6 +398,9 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       updateQuantity,
       removeItem,
       clearCart,
+      checkout,
+      updateCheckout,
+      missingCheckoutFields,
       whatsappCheckoutHref,
     }),
     [
@@ -271,6 +419,9 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       updateQuantity,
       removeItem,
       clearCart,
+      checkout,
+      updateCheckout,
+      missingCheckoutFields,
       whatsappCheckoutHref,
     ]
   )

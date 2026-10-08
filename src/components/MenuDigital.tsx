@@ -13,6 +13,7 @@ import { esfihaImageUrl, fallbackImage, pizzaImage } from '../content/menuImages
 import { siteContent } from '../content/siteContent'
 import { useVisitMode } from '../context/VisitModeContext'
 import { useOrder } from '../context/OrderContext'
+import { loadModelViewer } from '../utils/loadModelViewer'
 import { MENU_FILTER_EVENT, type MenuFilterTarget } from '../utils/menuNavigation'
 import { ArViewerModal } from './ArViewerModal'
 
@@ -291,6 +292,8 @@ export function MenuDigital() {
                     {show3d ? (
                       <button
                         type="button"
+                        onPointerEnter={() => void loadModelViewer().catch(() => {})}
+                        onTouchStart={() => void loadModelViewer().catch(() => {})}
                         onClick={() => setArOpen(true)}
                         className="text-xs font-semibold uppercase tracking-[0.12em] text-gold transition hover:text-gold-soft"
                       >

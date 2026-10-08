@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { ArModel } from '../content/arModels'
+import { loadModelViewer } from '../utils/loadModelViewer'
 
 type ArViewerModalProps = {
   model: ArModel | null
@@ -41,6 +42,25 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
   const [viewerEl, setViewerEl] = useState<HTMLElement | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
+  const [viewerReady, setViewerReady] = useState(false)
+
+  useEffect(() => {
+    if (!model) return
+    let cancelled = false
+    loadModelViewer()
+      .then(() => {
+        if (!cancelled) setViewerReady(true)
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setIsLoading(false)
+          setHasError(true)
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [model])
 
   useEffect(() => {
     if (!model) return
@@ -143,27 +163,29 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
               <p className="text-sm text-cream">Não foi possível carregar a pizza. Tente de novo.</p>
             </div>
           ) : null}
-          <model-viewer
-            ref={(el) => setViewerEl(el)}
-            key={model.src}
-            src={model.src}
-            alt={model.alt}
-            camera-controls
-            touch-action="none"
-            auto-rotate
-            shadow-intensity="1"
-            exposure="1"
-            scale={model.scale}
-            loading="eager"
-            style={{
-              width: '100%',
-              height: '100%',
-              minHeight: '320px',
-              touchAction: 'none',
-              opacity: isLoading || hasError ? 0 : 1,
-              transition: 'opacity 0.25s ease',
-            }}
-          />
+          {viewerReady ? (
+            <model-viewer
+              ref={(el) => setViewerEl(el)}
+              key={model.src}
+              src={model.src}
+              alt={model.alt}
+              camera-controls
+              touch-action="none"
+              auto-rotate
+              shadow-intensity="1"
+              exposure="1"
+              scale={model.scale}
+              loading="eager"
+              style={{
+                width: '100%',
+                height: '100%',
+                minHeight: '320px',
+                touchAction: 'none',
+                opacity: isLoading || hasError ? 0 : 1,
+                transition: 'opacity 0.25s ease',
+              }}
+            />
+          ) : null}
         </div>
       </div>
     </div>
