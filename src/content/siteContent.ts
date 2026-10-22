@@ -73,8 +73,14 @@ export const siteContent = {
     esfihasNote: 'Esfihas: todos os dias',
     area: SEO_ADDRESS.serviceNote,
     locationLabel: SEO_ADDRESS.display,
-    instagramLabel: 'Instagram da Claudia Delivery',
+    instagramLabel: 'Instagram',
+    instagramHandle: '@claudiaclementinodasilva',
     instagramHref: 'https://www.instagram.com/claudiaclementinodasilva/',
+  },
+  credit: {
+    label: 'Site feito por',
+    handle: '@franciscojeronimo0',
+    href: 'https://www.instagram.com/franciscojeronimo0/',
   },
 } as const
 

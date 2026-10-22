@@ -55,18 +55,52 @@ export function Footer({ className = '' }: FooterProps) {
             href={siteContent.footer.instagramHref}
             target="_blank"
             rel="noreferrer"
-            className="mt-4 inline-flex min-h-10 items-center text-sm text-cream-muted transition hover:text-cream"
+            className="mt-4 inline-flex min-h-10 items-center gap-2 text-sm text-cream-muted transition hover:text-cream"
+            aria-label={`Instagram ${siteContent.footer.instagramHandle}`}
           >
-            {siteContent.footer.instagramLabel}
+            <InstagramIcon className="text-gold" />
+            <span>{siteContent.footer.instagramHandle}</span>
           </a>
         </Reveal>
       </div>
 
       <div className="relative border-t border-cream/10">
-        <p className="mx-auto max-w-6xl px-4 py-5 text-center text-xs text-cream-muted/55 sm:px-5">
-          © {new Date().getFullYear()} {siteContent.brandName}
-        </p>
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-5 text-center sm:flex-row sm:px-5 sm:text-left">
+          <p className="text-xs text-cream-muted/55">
+            © {new Date().getFullYear()} {siteContent.brandName}
+          </p>
+          <a
+            href={siteContent.credit.href}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-9 items-center gap-2 rounded-full border border-cream/10 bg-night-elevated/60 px-3.5 py-1.5 text-xs text-cream-muted transition hover:border-gold/35 hover:text-cream"
+            aria-label={`${siteContent.credit.label} ${siteContent.credit.handle}`}
+          >
+            <span className="text-cream-muted/70">{siteContent.credit.label}</span>
+            <InstagramIcon className="text-gold" />
+            <span className="font-medium text-cream/90">{siteContent.credit.handle}</span>
+          </a>
+        </div>
       </div>
     </footer>
+  )
+}
+
+function InstagramIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      aria-hidden
+      className={`shrink-0 ${className}`}
+    >
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
   )
 }
