@@ -70,7 +70,7 @@ export const siteContent = {
   },
   footer: {
     hours: 'Todos os dias, das 18h às 22h',
-    esfihasNote: 'Esfihas: todos os dias',
+    esfihasNote: 'Pizza e esfihas: todos os dias',
     area: SEO_ADDRESS.serviceNote,
     locationLabel: SEO_ADDRESS.display,
     instagramLabel: 'Instagram',
