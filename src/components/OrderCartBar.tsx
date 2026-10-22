@@ -88,7 +88,7 @@ export function OrderCartBar() {
         </div>
 
         {cartOpen ? (
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3" data-lenis-prevent>
             {items.length === 0 ? (
               <p className="py-8 text-center text-sm text-night/55">Sua comanda está vazia.</p>
             ) : (

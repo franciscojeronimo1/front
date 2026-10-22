@@ -43,7 +43,7 @@ export const siteContent = {
     titleLead: 'Pizza e esfiha em ',
     titleAccent: 'Santana do Jacaré.',
     subtitle:
-      'Escolha os sabores, monte o pedido e finalize pelo WhatsApp — simples e rápido.',
+      'Cardápio digital, pedido montado no site e finalizado no WhatsApp — rápido, claro e sem enrolação.',
     cta: 'Ver cardápio',
   },
   /** Textos quando o site abre pelo QR na pizzaria (?local=1). */
@@ -57,7 +57,7 @@ export const siteContent = {
   },
   cardapio: {
     label: 'Cardápio',
-    title: 'Escolha sem complicação',
+    title: 'Sabores pra todos os gostos',
     note: 'Tamanhos: pequena, média, grande e família. Meia a meia em média, grande e família (valor do sabor mais caro).',
     searchPlaceholder: 'Buscar sabor ou ingrediente',
     photoDisclaimer: 'Fotos das pizzas e esfihas são meramente ilustrativas.',

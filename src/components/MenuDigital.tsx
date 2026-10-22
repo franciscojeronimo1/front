@@ -15,7 +15,9 @@ import { useVisitMode } from '../context/VisitModeContext'
 import { useOrder } from '../context/OrderContext'
 import { loadModelViewer } from '../utils/loadModelViewer'
 import { MENU_FILTER_EVENT, type MenuFilterTarget } from '../utils/menuNavigation'
+import { smoothScrollTo } from '../utils/smoothScrollTo'
 import { ArViewerModal } from './ArViewerModal'
+import { Reveal } from './Reveal'
 
 type FilterId =
   | 'todas'
@@ -146,7 +148,7 @@ export function MenuDigital() {
     const scrollToFilters = (target: MenuFilterTarget) => {
       const row = document.getElementById('cardapio-filtros')
       if (!row) return
-      row.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      smoothScrollTo(row, { offset: -88 })
       const chip = row.querySelector<HTMLElement>(`[data-filter="${target}"]`)
       if (chip) row.scrollLeft = chip.offsetLeft - row.offsetLeft - 16
     }
@@ -181,31 +183,34 @@ export function MenuDigital() {
   }, [rows, filter, query])
 
   return (
-    <section id="cardapio" className="border-b border-cream/10 bg-night">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-5 sm:py-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-tomato">
-          {siteContent.cardapio.label}
-        </p>
-        <h2 className="mt-3 font-display text-3xl text-gold sm:text-5xl">
-          {siteContent.cardapio.title}
-        </h2>
-        <p className="mt-4 max-w-2xl text-sm text-cream-muted sm:text-base">
-          {siteContent.cardapio.note}
-        </p>
-        {isLocal ? (
-          <p className="mt-3 rounded-2xl border border-gold/25 bg-gold/10 px-4 py-3 text-sm text-gold">
-            {siteContent.cardapio.localHint}
+    <section id="cardapio" className="relative border-b border-cream/10 bg-night">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-night-elevated/50 to-transparent" />
+      <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-5 sm:py-20">
+        <Reveal>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-tomato">
+            {siteContent.cardapio.label}
           </p>
-        ) : (
-          <p className="mt-2 text-sm text-cream-muted">{esfihasContent.note}</p>
-        )}
+          <h2 className="mt-3 font-display text-3xl tracking-tight text-cream sm:text-5xl">
+            {siteContent.cardapio.title}
+          </h2>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-cream-muted sm:text-base">
+            {siteContent.cardapio.note}
+          </p>
+          {isLocal ? (
+            <p className="mt-3 rounded-2xl border border-gold/25 bg-gold/10 px-4 py-3 text-sm text-gold">
+              {siteContent.cardapio.localHint}
+            </p>
+          ) : (
+            <p className="mt-2 text-sm text-cream-muted">{esfihasContent.note}</p>
+          )}
 
-        <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-cream/15 bg-night-elevated px-3.5 py-1.5 text-xs text-cream-muted">
-          <InfoIcon />
-          {siteContent.cardapio.photoDisclaimer}
-        </p>
+          <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-cream/15 bg-night-elevated/80 px-3.5 py-1.5 text-xs text-cream-muted backdrop-blur-sm">
+            <InfoIcon />
+            {siteContent.cardapio.photoDisclaimer}
+          </p>
+        </Reveal>
 
-        <div className="mt-6">
+        <div className="sticky top-[3.6rem] z-30 -mx-4 mt-8 border-y border-cream/10 bg-night/90 px-4 py-3 backdrop-blur-xl sm:-mx-5 sm:px-5">
           <label className="relative block">
             <span className="sr-only">Buscar</span>
             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cream-muted">
@@ -215,63 +220,67 @@ export function MenuDigital() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={siteContent.cardapio.searchPlaceholder}
-              className="w-full rounded-2xl border border-cream/15 bg-night-elevated py-3.5 pl-11 pr-4 text-base text-cream outline-none placeholder:text-cream-muted/70 focus:border-gold/50 sm:text-sm"
+              className="w-full rounded-2xl border border-cream/15 bg-night-elevated py-3.5 pl-11 pr-4 text-base text-cream outline-none transition placeholder:text-cream-muted/70 focus:border-gold/50 focus:shadow-[0_0_0_3px_rgb(217_164_65_/_0.12)] sm:text-sm"
             />
           </label>
-        </div>
 
-        <div
-          id="cardapio-filtros"
-          className="chips-scroll mt-5 flex scroll-mt-24 gap-2 overflow-x-auto pb-1"
-        >
-          {FILTERS.map((chip) => {
-            const active = filter === chip.id
-            return (
-              <button
-                key={chip.id}
-                type="button"
-                data-filter={chip.id}
-                onClick={() => {
-                  setFilter(chip.id)
-                  if (chip.id === 'esfihas') {
-                    document
-                      .getElementById('cardapio-filtros')
-                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          <div
+            id="cardapio-filtros"
+            className="chips-scroll mt-3 flex scroll-mt-28 gap-2 overflow-x-auto pb-0.5"
+            data-lenis-prevent
+          >
+            {FILTERS.map((chip) => {
+              const active = filter === chip.id
+              return (
+                <button
+                  key={chip.id}
+                  type="button"
+                  data-filter={chip.id}
+                  onClick={() => {
+                    setFilter(chip.id)
+                    if (chip.id === 'esfihas') {
+                      const row = document.getElementById('cardapio-filtros')
+                      if (row) smoothScrollTo(row, { offset: -88 })
+                    }
+                  }}
+                  className={
+                    active
+                      ? 'shrink-0 rounded-full bg-cream px-4 py-2 text-sm font-semibold text-night shadow-[0_8px_24px_-12px_rgb(244_232_216_/_0.55)]'
+                      : 'shrink-0 rounded-full border border-cream/20 px-4 py-2 text-sm font-medium text-cream/90 transition hover:border-cream/45 hover:bg-cream/5'
                   }
-                }}
-                className={
-                  active
-                    ? 'shrink-0 rounded-full bg-cream px-4 py-2 text-sm font-semibold text-night'
-                    : 'shrink-0 rounded-full border border-cream/25 px-4 py-2 text-sm font-medium text-cream transition hover:border-cream/50'
-                }
-              >
-                {chip.label}
-              </button>
-            )
-          })}
+                >
+                  {chip.label}
+                </button>
+              )
+            })}
+          </div>
         </div>
 
-        <div id="esfihas" className="mt-10 grid gap-0 sm:grid-cols-2">
-          {filtered.map((row) => {
+        <div id="esfihas" className="mt-6 grid gap-0 sm:grid-cols-2">
+          {filtered.map((row, index) => {
             const show3d = row.kind === 'pizza' && has3dModel(row.name)
             const priceLabel = formatPrecoBRL(row.kind === 'pizza' ? row.startingPrice : row.price)
 
             return (
-              <article
+              <Reveal
                 key={row.key}
-                className="animate-rise flex gap-4 border-b border-cream/10 py-5 pr-2 sm:px-2"
+                as="article"
+                delay={Math.min(index, 8) * 45}
+                className="menu-row flex gap-4 border-b border-cream/10 py-5 pr-2 sm:rounded-2xl sm:px-3"
               >
-                <img
-                  src={row.image}
-                  alt={row.name}
-                  className="h-20 w-20 shrink-0 rounded-2xl object-cover sm:h-24 sm:w-24"
-                  loading="lazy"
-                  onError={(event) => {
-                    const img = event.currentTarget
-                    const fallback = row.kind === 'bebida' ? row.fallbackImage : fallbackImage
-                    if (img.src !== fallback) img.src = fallback
-                  }}
-                />
+                <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl ring-1 ring-cream/10 sm:h-24 sm:w-24">
+                  <img
+                    src={row.image}
+                    alt={row.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    onError={(event) => {
+                      const img = event.currentTarget
+                      const fallback = row.kind === 'bebida' ? row.fallbackImage : fallbackImage
+                      if (img.src !== fallback) img.src = fallback
+                    }}
+                  />
+                </div>
                 <div className="min-w-0 flex-1">
                   <h3 className="font-display text-lg leading-tight text-cream sm:text-xl">
                     {row.name}
@@ -295,7 +304,7 @@ export function MenuDigital() {
                         onPointerEnter={() => void loadModelViewer().catch(() => {})}
                         onTouchStart={() => void loadModelViewer().catch(() => {})}
                         onClick={() => setArOpen(true)}
-                        className="inline-flex min-h-10 items-center rounded-full border border-gold/40 px-3 text-xs sm:px-4 font-semibold uppercase tracking-[0.12em] text-gold transition hover:border-gold hover:text-gold-soft"
+                        className="inline-flex min-h-10 items-center rounded-full border border-gold/40 px-3 text-xs font-semibold uppercase tracking-[0.12em] text-gold transition hover:border-gold hover:text-gold-soft sm:px-4"
                       >
                         Ver
                       </button>
@@ -319,14 +328,14 @@ export function MenuDigital() {
                             unitPrice: row.price,
                           })
                         }}
-                        className="inline-flex min-h-10 items-center rounded-full bg-tomato px-3.5 text-xs font-bold uppercase tracking-[0.08em] sm:px-4 sm:tracking-[0.12em] text-white transition hover:bg-tomato-dark active:scale-95"
+                        className="inline-flex min-h-10 items-center rounded-full bg-tomato px-3.5 text-xs font-bold uppercase tracking-[0.08em] text-white transition hover:bg-tomato-dark active:scale-95 sm:px-4 sm:tracking-[0.12em]"
                       >
                         Adicionar +
                       </button>
                     ) : null}
                   </div>
                 </div>
-              </article>
+              </Reveal>
             )
           })}
         </div>

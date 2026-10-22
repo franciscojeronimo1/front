@@ -3,10 +3,12 @@ import { VisitModeProvider, useVisitMode } from './context/VisitModeContext'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
+import { HowItWorks } from './components/HowItWorks'
 import { MenuDigital } from './components/MenuDigital'
 import { OrderCartBar } from './components/OrderCartBar'
 import { OrderModal } from './components/OrderModal'
 import { SeoJsonLd } from './components/SeoJsonLd'
+import { SmoothScroll } from './components/SmoothScroll'
 
 function AppContent() {
   const { isLocal } = useVisitMode()
@@ -24,6 +26,7 @@ function AppContent() {
       <Header />
       <main>
         <Hero />
+        <HowItWorks />
         <MenuDigital />
       </main>
       <Footer className={bottomPad} />
@@ -47,7 +50,9 @@ export default function App() {
   return (
     <VisitModeProvider>
       <OrderProvider>
-        <AppContent />
+        <SmoothScroll>
+          <AppContent />
+        </SmoothScroll>
       </OrderProvider>
     </VisitModeProvider>
   )

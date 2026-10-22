@@ -126,6 +126,7 @@ export function ArViewerModal({ model, onClose }: ArViewerModalProps) {
         aria-modal="true"
         aria-labelledby="ar-modal-title"
         className="flex max-h-[94vh] w-full max-w-lg touch-auto flex-col overflow-hidden overscroll-contain rounded-t-[1.75rem] border border-cream/10 bg-night shadow-2xl sm:rounded-[1.75rem]"
+        data-lenis-prevent
         onClick={(event) => event.stopPropagation()}
         onTouchMove={(event) => event.stopPropagation()}
       >

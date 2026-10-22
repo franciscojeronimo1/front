@@ -114,6 +114,7 @@ export function OrderModal() {
         aria-modal="true"
         aria-labelledby="order-modal-title"
         className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-[1.75rem] border border-cream/10 bg-night pb-[env(safe-area-inset-bottom)] shadow-2xl sm:rounded-[1.75rem]"
+        data-lenis-prevent
         onClick={(event) => event.stopPropagation()}
       >
         <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-cream/10 bg-night/95 px-4 py-4 backdrop-blur-xl sm:px-5">
