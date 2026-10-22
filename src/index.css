@@ -207,6 +207,8 @@ input:disabled {
 
 .chips-scroll {
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 .chips-scroll::-webkit-scrollbar {
   display: none;

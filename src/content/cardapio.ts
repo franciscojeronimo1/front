@@ -13,6 +13,8 @@ export type CardapioItem = {
   note?: string
   /** Sabor lançado recentemente (selo "Novo" e filtro Novidades). */
   novo?: boolean
+  /** Destaque de popularidade (selo "Mais pedida" e filtro Mais pedidas). */
+  maisPedido?: boolean
 }
 
 export type CardapioSecao = {
@@ -45,6 +47,7 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
         name: 'PORTUGUESA COMPLETA',
         ingredients:
           'Molho vermelho, muçarela, presunto, bacon, calabresa, palmito, cebola, alho e milho.',
+        maisPedido: true,
       },
       {
         name: 'FRANGOLINO',
@@ -64,6 +67,7 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
         name: 'CANADENSE',
         ingredients:
           'Molho branco, muçarela, bacon, lombinho, palmito e cheddar.',
+        maisPedido: true,
       },
     ],
   },
@@ -110,6 +114,7 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
         name: 'COSTELA',
         ingredients:
           'Molho vermelho, muçarela, barbecue, champignon, cebola caramelizada e costela.',
+        maisPedido: true,
       },
       {
         name: 'CAMARÃO',
@@ -141,6 +146,7 @@ export const cardapioSecoes: readonly CardapioSecao[] = [
       {
         name: 'CALABRESA',
         ingredients: 'Molho vermelho, muçarela, cebola e calabresa.',
+        maisPedido: true,
       },
       {
         name: 'LOMBINHO',

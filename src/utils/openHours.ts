@@ -25,3 +25,10 @@ export function isRestaurantOpen(now = new Date()): boolean {
 export function restaurantHoursLabel(): string {
   return `${String(OPEN_HOUR).padStart(2, '0')}:00 às ${String(CLOSE_HOUR).padStart(2, '0')}:00`
 }
+
+/** Ex.: "18h" — pra frases curtas no checkout. */
+export function restaurantOpensAtLabel(): string {
+  return `${OPEN_HOUR}h`
+}
+
+export const DELIVERY_ETA_LABEL = 'entrega em ~40–60 min' as const

@@ -16,7 +16,7 @@ const stepsDelivery = [
   {
     n: '03',
     title: 'Finalize no WhatsApp',
-    text: 'Endereço e pagamento já vão na mensagem. A gente confirma e entrega.',
+    text: 'Endereço e pagamento já vão na mensagem. Entrega em ~40–60 min.',
   },
 ] as const
 

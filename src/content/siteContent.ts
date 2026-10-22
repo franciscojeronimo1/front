@@ -63,6 +63,11 @@ export const siteContent = {
     photoDisclaimer: 'Fotos das pizzas e esfihas são meramente ilustrativas.',
     localHint: 'Escolheu? Chame o garçom e faça o pedido na mesa.',
   },
+  checkout: {
+    deliveryEta: 'Entrega em ~40–60 min',
+    closedHint:
+      'Pode montar o pedido agora. Ao enviar no WhatsApp, confirmamos horário e disponibilidade.',
+  },
   footer: {
     hours: 'Todos os dias, das 18h às 22h',
     esfihasNote: 'Esfihas: todos os dias',

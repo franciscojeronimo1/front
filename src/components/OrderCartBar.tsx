@@ -1,7 +1,9 @@
-import { useState, type MouseEvent, type ReactNode } from 'react'
+import { useEffect, useState, type MouseEvent, type ReactNode } from 'react'
 import { formatPrecoBRL } from '../content/cardapio'
+import { siteContent } from '../content/siteContent'
 import { formatLineDescription, paymentLabels, useOrder } from '../context/OrderContext'
 import type { CheckoutField, Fulfillment, PaymentMethod } from '../types/order'
+import { isRestaurantOpen, restaurantOpensAtLabel } from '../utils/openHours'
 
 const fieldIds: Record<CheckoutField, string> = {
   name: 'checkout-name',
@@ -34,10 +36,19 @@ export function OrderCartBar() {
     whatsappCheckoutHref,
   } = useOrder()
   const [showErrors, setShowErrors] = useState(false)
+  const [openNow, setOpenNow] = useState(() => isRestaurantOpen())
+
+  useEffect(() => {
+    const sync = () => setOpenNow(isRestaurantOpen())
+    sync()
+    const interval = window.setInterval(sync, 60_000)
+    return () => window.clearInterval(interval)
+  }, [])
 
   if (!cartOpen && itemCount === 0) return null
 
   const isMissing = (field: CheckoutField) => showErrors && missingCheckoutFields.includes(field)
+  const showDeliveryEta = checkout.fulfillment === 'entrega'
 
   function handleSend(event: MouseEvent<HTMLAnchorElement>) {
     if (missingCheckoutFields.length === 0) return
@@ -77,6 +88,9 @@ export function OrderCartBar() {
             <p className="font-display text-xl text-night">
               {itemCount} {itemCount === 1 ? 'item' : 'itens'}
             </p>
+            {showDeliveryEta && !cartOpen ? (
+              <p className="mt-0.5 text-xs font-medium text-night/55">{siteContent.checkout.deliveryEta}</p>
+            ) : null}
           </div>
           <button
             type="button"
@@ -86,6 +100,15 @@ export function OrderCartBar() {
             {cartOpen ? 'Fechar' : 'Abrir'}
           </button>
         </div>
+
+        {cartOpen && !openNow ? (
+          <div className="border-b border-night/10 bg-night px-4 py-3 text-cream">
+            <p className="text-sm font-semibold text-gold">
+              Estamos fechados · abrimos às {restaurantOpensAtLabel()}
+            </p>
+            <p className="mt-1 text-xs leading-relaxed text-cream-muted">{siteContent.checkout.closedHint}</p>
+          </div>
+        ) : null}
 
         {cartOpen ? (
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3" data-lenis-prevent>
@@ -243,8 +266,13 @@ export function OrderCartBar() {
         ) : null}
 
         <div className="border-t border-night/10 px-4 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-3">
-          <div className="mb-3 flex items-end justify-between">
-            <span className="text-sm text-night/60">Total</span>
+          <div className="mb-3 flex items-end justify-between gap-3">
+            <div>
+              <span className="text-sm text-night/60">Total</span>
+              {showDeliveryEta ? (
+                <p className="mt-0.5 text-xs text-night/50">{siteContent.checkout.deliveryEta}</p>
+              ) : null}
+            </div>
             <span className="font-display text-2xl text-tomato">{formatPrecoBRL(total)}</span>
           </div>
           {showErrors && missingCheckoutFields.length > 0 ? (

@@ -21,6 +21,7 @@ import { Reveal } from './Reveal'
 
 type FilterId =
   | 'todas'
+  | 'mais-pedidas'
   | 'novidades'
   | 'bacon-alho'
   | 'queijos'
@@ -66,13 +67,14 @@ type MenuRow =
 
 const FILTERS: { id: FilterId; label: string }[] = [
   { id: 'todas', label: 'Todas' },
+  { id: 'mais-pedidas', label: 'Mais pedidas' },
   { id: 'novidades', label: 'Novidades' },
   { id: 'bacon-alho', label: 'Bacon & alho' },
   { id: 'queijos', label: 'Queijos' },
   { id: 'carnes', label: 'Carnes' },
   { id: 'tradicionais', label: 'Tradicionais' },
   { id: 'vegetarianas', label: 'Vegetarianas' },
-  { id: 'esfihas', label: 'Esfihas & combos' },
+  { id: 'esfihas', label: 'Esfihas' },
   { id: 'bebidas', label: 'Bebidas' },
 ]
 
@@ -171,7 +173,9 @@ export function MenuDigital() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return rows.filter((row) => {
-      if (filter === 'novidades') {
+      if (filter === 'mais-pedidas') {
+        if (row.kind !== 'pizza' || !row.item.maisPedido) return false
+      } else if (filter === 'novidades') {
         if (row.kind !== 'pizza' || !row.item.novo) return false
       } else if (filter !== 'todas' && row.filterId !== filter) return false
       if (!q) return true
@@ -224,35 +228,41 @@ export function MenuDigital() {
             />
           </label>
 
-          <div
-            id="cardapio-filtros"
-            className="chips-scroll mt-3 flex scroll-mt-28 gap-2 overflow-x-auto pb-0.5"
-            data-lenis-prevent
-          >
-            {FILTERS.map((chip) => {
-              const active = filter === chip.id
-              return (
-                <button
-                  key={chip.id}
-                  type="button"
-                  data-filter={chip.id}
-                  onClick={() => {
-                    setFilter(chip.id)
-                    if (chip.id === 'esfihas') {
-                      const row = document.getElementById('cardapio-filtros')
-                      if (row) smoothScrollTo(row, { offset: -88 })
+          <div className="relative mt-3">
+            <div
+              id="cardapio-filtros"
+              className="chips-scroll flex scroll-mt-28 gap-2 overflow-x-auto overscroll-x-contain pb-0.5 pe-10"
+              data-lenis-prevent
+            >
+              {FILTERS.map((chip) => {
+                const active = filter === chip.id
+                return (
+                  <button
+                    key={chip.id}
+                    type="button"
+                    data-filter={chip.id}
+                    onClick={() => {
+                      setFilter(chip.id)
+                      if (chip.id === 'esfihas') {
+                        const row = document.getElementById('cardapio-filtros')
+                        if (row) smoothScrollTo(row, { offset: -88 })
+                      }
+                    }}
+                    className={
+                      active
+                        ? 'shrink-0 rounded-full bg-cream px-3.5 py-2 text-sm font-semibold text-night shadow-[0_8px_24px_-12px_rgb(244_232_216_/_0.55)]'
+                        : 'shrink-0 rounded-full border border-cream/20 px-3.5 py-2 text-sm font-medium text-cream/90 transition hover:border-cream/45 hover:bg-cream/5'
                     }
-                  }}
-                  className={
-                    active
-                      ? 'shrink-0 rounded-full bg-cream px-4 py-2 text-sm font-semibold text-night shadow-[0_8px_24px_-12px_rgb(244_232_216_/_0.55)]'
-                      : 'shrink-0 rounded-full border border-cream/20 px-4 py-2 text-sm font-medium text-cream/90 transition hover:border-cream/45 hover:bg-cream/5'
-                  }
-                >
-                  {chip.label}
-                </button>
-              )
-            })}
+                  >
+                    {chip.label}
+                  </button>
+                )
+              })}
+            </div>
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-night via-night/80 to-transparent"
+              aria-hidden
+            />
           </div>
         </div>
 
@@ -284,6 +294,11 @@ export function MenuDigital() {
                 <div className="min-w-0 flex-1">
                   <h3 className="font-display text-lg leading-tight text-cream sm:text-xl">
                     {row.name}
+                    {row.kind === 'pizza' && row.item.maisPedido ? (
+                      <span className="ml-2 inline-block rounded-full bg-gold px-2 py-0.5 align-middle font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-night">
+                        Mais pedida
+                      </span>
+                    ) : null}
                     {row.kind === 'pizza' && row.item.novo ? (
                       <span className="ml-2 inline-block rounded-full bg-tomato px-2 py-0.5 align-middle font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-cream">
                         Novo

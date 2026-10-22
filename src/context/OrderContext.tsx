@@ -15,6 +15,7 @@ import {
   type PizzaSizeId,
 } from '../content/pizzaSizes'
 import { WHATSAPP_PHONE_E164 } from '../content/siteContent'
+import { DELIVERY_ETA_LABEL, isRestaurantOpen } from '../utils/openHours'
 import type {
   CheckoutField,
   CheckoutInfo,
@@ -147,13 +148,25 @@ function buildWhatsAppMessage(
   })
 
   const generalNote = orderNote.trim()
+  const open = isRestaurantOpen()
+  const etaLine =
+    checkout.fulfillment === 'entrega'
+      ? `*Previsão:* ${DELIVERY_ETA_LABEL}`
+      : '*Previsão:* retirada no local (avisamos quando estiver pronto)'
 
   return [
     'Olá! Vim pelo site da Claudia Delivery e quero fazer um pedido:',
+    ...(open
+      ? []
+      : [
+          '',
+          '_Pedido enviado fora do horário. Por favor, confirmem disponibilidade._',
+        ]),
     '',
     ...lines,
     '',
     `*Total: ${formatPrecoBRL(total)}*`,
+    etaLine,
     '',
     ...buildCheckoutLines(checkout, total),
     ...(generalNote ? ['', `*Observações:* ${generalNote}`] : []),
