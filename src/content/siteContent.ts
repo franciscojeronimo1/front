@@ -39,7 +39,7 @@ export const siteContent = {
   brandName: 'Claudia Delivery',
   locationShort: 'Santana do Jacaré — MG',
   hero: {
-    eyebrow: 'Pizza todos os dias • Esfihas de segunda a quinta',
+    eyebrow: 'Pizza e esfihas todos os dias •',
     titleLead: 'Pizza e esfiha em ',
     titleAccent: 'Santana do Jacaré.',
     subtitle:
@@ -65,7 +65,7 @@ export const siteContent = {
   },
   footer: {
     hours: 'Todos os dias, das 18h às 22h',
-    esfihasNote: 'Esfihas: segunda a quinta',
+    esfihasNote: 'Esfihas: todos os dias',
     area: SEO_ADDRESS.serviceNote,
     locationLabel: SEO_ADDRESS.display,
     instagramLabel: 'Instagram da Claudia Delivery',
