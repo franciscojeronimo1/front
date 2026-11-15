@@ -12,6 +12,7 @@ import { IngredientCategories } from './IngredientCategories'
 import { SuggestionsChips } from './SuggestionsChips'
 import { ActionsRow } from './ActionsRow'
 import { PizzaNameField } from './PizzaNameField'
+import { ShareButton } from './ShareButton'
 
 interface PizzaBuilderContentProps {
   onClose: () => void
@@ -94,6 +95,31 @@ export default function PizzaBuilderContent({ onClose }: PizzaBuilderContentProp
             <IngredientCategories builder={builder} />
             <ActionsRow builder={builder} />
             <PizzaNameField builder={builder} />
+            
+            <div className="mb-4 flex gap-2">
+              <ShareButton builder={builder} />
+              <button
+                type="button"
+                onClick={() => builder.setMuted(!builder.muted)}
+                className={`flex h-10 w-10 items-center justify-center rounded-full border transition ${
+                  builder.muted
+                    ? 'border-line bg-night-2 text-cream-muted opacity-70'
+                    : 'border-gold/35 bg-gold/14 text-gold-soft hover:bg-gold/25'
+                }`}
+                aria-label={builder.muted ? 'Ativar sons' : 'Silenciar sons'}
+                title={builder.muted ? 'Som desligado' : 'Som e vibração'}
+              >
+                {builder.muted ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M5 10v4h3l4 3V7L8 10H5zm12.7-3.3 1.4 1.4-2.5 2.5 2.5 2.5-1.4 1.4-2.5-2.5-2.5 2.5-1.4-1.4 2.5-2.5-2.5-2.5 1.4-1.4 2.5 2.5 2.5-2.5z"/>
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M5 10v4h3l4 3V7L8 10H5zm11.5 2a3.5 3.5 0 0 0-1.8-3v6a3.5 3.5 0 0 0 1.8-3zM16 6.3v1.5a6 6 0 0 1 0 8.4v1.5a7.5 7.5 0 0 0 0-11.4z"/>
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

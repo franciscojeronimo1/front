@@ -22,6 +22,7 @@ export interface PizzaBuilderState {
   baked: boolean
   baking: boolean
   pizzaName: string
+  lastAnimatedId: string | null
 }
 
 const MUTE_STORAGE_KEY = 'pizza-builder:muted'
@@ -38,6 +39,7 @@ export function usePizzaBuilder() {
     baked: false,
     baking: false,
     pizzaName: '',
+    lastAnimatedId: null,
   })
 
   const [muted, setMuted] = useState(() => {
@@ -181,9 +183,10 @@ export function usePizzaBuilder() {
             : prev.selectedWhole
 
         const newSet = new Set(workingSet)
+        const isAdding = !newSet.has(ingredientId)
 
         // Se já está selecionado, remove
-        if (newSet.has(ingredientId)) {
+        if (!isAdding) {
           newSet.delete(ingredientId)
         } else {
           // Se é extra e já está no limite, não adiciona
@@ -211,14 +214,16 @@ export function usePizzaBuilder() {
           newSet.add(ingredientId)
         }
 
+        const animateId = isAdding && !ingredient.base ? ingredientId : null
+
         if (prev.mode === 'meia') {
           if (prev.activeHalf === 1) {
-            return { ...prev, selectedHalf1: newSet, baked: false, baking: false }
+            return { ...prev, selectedHalf1: newSet, baked: false, baking: false, lastAnimatedId: animateId }
           } else {
-            return { ...prev, selectedHalf2: newSet, baked: false, baking: false }
+            return { ...prev, selectedHalf2: newSet, baked: false, baking: false, lastAnimatedId: animateId }
           }
         } else {
-          return { ...prev, selectedWhole: newSet, baked: false, baking: false }
+          return { ...prev, selectedWhole: newSet, baked: false, baking: false, lastAnimatedId: animateId }
         }
       })
     },
@@ -249,12 +254,12 @@ export function usePizzaBuilder() {
 
       if (prev.mode === 'meia') {
         if (prev.activeHalf === 1) {
-          return { ...prev, selectedHalf1: newSet, baked: false, baking: false }
+          return { ...prev, selectedHalf1: newSet, baked: false, baking: false, lastAnimatedId: 'surprise' }
         } else {
-          return { ...prev, selectedHalf2: newSet, baked: false, baking: false }
+          return { ...prev, selectedHalf2: newSet, baked: false, baking: false, lastAnimatedId: 'surprise' }
         }
       } else {
-        return { ...prev, selectedWhole: newSet, baked: false, baking: false }
+        return { ...prev, selectedWhole: newSet, baked: false, baking: false, lastAnimatedId: 'surprise' }
       }
     })
   }, [])
