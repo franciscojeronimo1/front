@@ -18,6 +18,7 @@ import { MENU_FILTER_EVENT, type MenuFilterTarget } from '../utils/menuNavigatio
 import { smoothScrollTo } from '../utils/smoothScrollTo'
 import { ArViewerModal } from './ArViewerModal'
 import { Reveal } from './Reveal'
+import { PizzaBuilderModal } from './PizzaBuilder/PizzaBuilderModal'
 
 type FilterId =
   | 'todas'
@@ -144,6 +145,7 @@ export function MenuDigital() {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<FilterId>('todas')
   const [arOpen, setArOpen] = useState(false)
+  const [builderOpen, setBuilderOpen] = useState(false)
   const rows = useMemo(() => buildRows(), [])
 
   useEffect(() => {
@@ -266,6 +268,29 @@ export function MenuDigital() {
           </div>
         </div>
 
+        {!isLocal && (
+          <Reveal delay={0}>
+            <div className="mt-8 overflow-hidden rounded-3xl border border-gold/30 bg-gradient-to-br from-gold/15 via-gold/5 to-transparent p-6 shadow-[0_8px_32px_rgba(217,164,65,0.15)]">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="mb-1 font-serif text-2xl text-cream">
+                    Monte <em className="text-gold-soft">sua pizza</em>
+                  </h3>
+                  <p className="text-sm leading-relaxed text-cream-muted">
+                    Escolha ingredientes, veja caindo na pizza e monte do seu jeito. Inteira ou meio a meia!
+                  </p>
+                </div>
+                <button
+                  onClick={() => setBuilderOpen(true)}
+                  className="shrink-0 rounded-2xl bg-gold px-6 py-3.5 font-bold text-night transition hover:bg-gold-soft hover:shadow-[0_8px_24px_rgba(217,164,65,0.4)]"
+                >
+                  Começar
+                </button>
+              </div>
+            </div>
+          </Reveal>
+        )}
+
         <div id="esfihas" className="mt-6 grid gap-0 sm:grid-cols-2">
           {filtered.map((row, index) => {
             const show3d = row.kind === 'pizza' && has3dModel(row.name)
@@ -366,6 +391,8 @@ export function MenuDigital() {
         model={arOpen ? PORTUGUESA_COMPLETA_AR_MODEL : null}
         onClose={() => setArOpen(false)}
       />
+
+      <PizzaBuilderModal isOpen={builderOpen} onClose={() => setBuilderOpen(false)} />
     </section>
   )
 }
