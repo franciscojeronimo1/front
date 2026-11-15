@@ -18,6 +18,21 @@ export type PizzaOrderLine = {
   note?: string
 }
 
+export type CustomPizzaOrderLine = {
+  id: string
+  type: 'custom-pizza'
+  mode: 'inteira' | 'meia'
+  size: PizzaSizeId
+  ingredientsWhole?: string[]
+  ingredientsHalf1?: string[]
+  ingredientsHalf2?: string[]
+  crust: string
+  pizzaName?: string
+  price: number
+  quantity: number
+  note?: string
+}
+
 export type SimpleOrderLine = {
   id: string
   type: 'simple'
@@ -30,7 +45,7 @@ export type SimpleOrderLine = {
   note?: string
 }
 
-export type OrderLineItem = PizzaOrderLine | SimpleOrderLine
+export type OrderLineItem = PizzaOrderLine | SimpleOrderLine | CustomPizzaOrderLine
 
 export type Fulfillment = 'entrega' | 'retirada'
 

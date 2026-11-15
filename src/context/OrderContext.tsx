@@ -16,6 +16,8 @@ import {
 } from '../content/pizzaSizes'
 import { WHATSAPP_PHONE_E164 } from '../content/siteContent'
 import { DELIVERY_ETA_LABEL, isRestaurantOpen } from '../utils/openHours'
+import { INGREDIENTS_BY_ID } from '../data/pizzaBuilderIngredients'
+import { CRUST_OPTIONS } from '../data/pizzaBuilderPricing'
 import type {
   CheckoutField,
   CheckoutInfo,
@@ -24,6 +26,7 @@ import type {
   PizzaOrderLine,
   PizzaRef,
   SimpleOrderLine,
+  CustomPizzaOrderLine,
 } from '../types/order'
 import { calculateLinePrice } from '../utils/pizzaPricing'
 
@@ -48,6 +51,7 @@ type OrderContextValue = {
     unitPrice: number
     quantity?: number
   }) => void
+  addCustomPizza: (item: Omit<CustomPizzaOrderLine, 'id' | 'type' | 'quantity'> & { quantity?: number }) => void
   updateQuantity: (id: string, quantity: number) => void
   removeItem: (id: string) => void
   clearCart: () => void
@@ -96,6 +100,18 @@ export function formatLineDescription(item: OrderLineItem): string {
     return `${qty}${item.name}${item.description ? ` — ${item.description}` : ''}`
   }
 
+  if (item.type === 'custom-pizza') {
+    const size = pizzaSizeLabel(item.size)
+    const qty = item.quantity > 1 ? `${item.quantity}x ` : ''
+    const name = item.pizzaName || 'Pizza montada'
+    
+    if (item.mode === 'inteira') {
+      return `${qty}*${name}* (inteira, ${size})`
+    } else {
+      return `${qty}*${name}* (meio a meia, ${size})`
+    }
+  }
+
   const size = pizzaSizeLabel(item.size)
   const qty = item.quantity > 1 ? `${item.quantity}x ` : ''
 
@@ -142,9 +158,52 @@ function buildWhatsAppMessage(
   checkout: CheckoutInfo
 ): string {
   const lines = items.flatMap((item, index) => {
-    const base = `${index + 1}. ${formatLineDescription(item)} — ${formatPrecoBRL(item.price)}`
+    let base = `${index + 1}. ${formatLineDescription(item)} — ${formatPrecoBRL(item.price)}`
+    const details: string[] = []
+    
+    // Adicionar detalhes da pizza montada
+    if (item.type === 'custom-pizza') {
+      if (item.mode === 'inteira' && item.ingredientsWhole) {
+        const ingredientNames = item.ingredientsWhole
+          .map(id => INGREDIENTS_BY_ID[id]?.name)
+          .filter(Boolean)
+        if (ingredientNames.length > 0) {
+          details.push(`   Ingredientes: ${ingredientNames.join(', ')}`)
+        }
+      } else if (item.mode === 'meia') {
+        if (item.ingredientsHalf1) {
+          const names1 = item.ingredientsHalf1
+            .map(id => INGREDIENTS_BY_ID[id]?.name)
+            .filter(Boolean)
+          if (names1.length > 0) {
+            details.push(`   Metade 1: ${names1.join(', ')}`)
+          }
+        }
+        if (item.ingredientsHalf2) {
+          const names2 = item.ingredientsHalf2
+            .map(id => INGREDIENTS_BY_ID[id]?.name)
+            .filter(Boolean)
+          if (names2.length > 0) {
+            details.push(`   Metade 2: ${names2.join(', ')}`)
+          }
+        }
+      }
+      
+      // Borda recheada
+      if (item.crust && item.crust !== 'none') {
+        const crustOption = CRUST_OPTIONS.find(c => c.id === item.crust)
+        if (crustOption) {
+          details.push(`   Borda: ${crustOption.label}`)
+        }
+      }
+    }
+    
     const note = item.note?.trim()
-    return note ? [base, `   Obs: ${note}`] : [base]
+    if (note) {
+      details.push(`   Obs: ${note}`)
+    }
+    
+    return [base, ...details]
   })
 
   const generalNote = orderNote.trim()
@@ -362,6 +421,23 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     []
   )
 
+  const addCustomPizza = useCallback(
+    (draft: Omit<CustomPizzaOrderLine, 'id' | 'type' | 'quantity'> & { quantity?: number }) => {
+      const quantity = draft.quantity ?? 1
+      setItems((current) => [
+        ...current,
+        {
+          ...draft,
+          type: 'custom-pizza',
+          id: crypto.randomUUID(),
+          quantity,
+        },
+      ])
+      setCartOpen(true)
+    },
+    []
+  )
+
   const updateQuantity = useCallback((id: string, quantity: number) => {
     if (quantity <= 0) {
       setItems((current) => current.filter((item) => item.id !== id))
@@ -408,6 +484,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       setOrderNote,
       addPizza,
       addSimple,
+      addCustomPizza,
       updateQuantity,
       removeItem,
       clearCart,
@@ -429,6 +506,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       toggleCart,
       addPizza,
       addSimple,
+      addCustomPizza,
       updateQuantity,
       removeItem,
       clearCart,

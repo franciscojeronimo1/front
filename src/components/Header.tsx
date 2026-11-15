@@ -1,13 +1,16 @@
+import { useState } from 'react'
 import { siteContent } from '../content/siteContent'
 import { useVisitMode } from '../context/VisitModeContext'
 import { useOrder } from '../context/OrderContext'
 import { useScrolled } from '../hooks/useScrolled'
 import { selectMenuFilter } from '../utils/menuNavigation'
+import { PizzaBuilderModal } from './PizzaBuilder/PizzaBuilderModal'
 
 export function Header() {
   const { isLocal } = useVisitMode()
   const { itemCount, toggleCart, setCartOpen } = useOrder()
   const scrolled = useScrolled(16)
+  const [builderOpen, setBuilderOpen] = useState(false)
 
   return (
     <header
@@ -38,6 +41,14 @@ export function Header() {
           >
             Pizzas
           </NavLink>
+          {!isLocal && (
+            <button
+              onClick={() => setBuilderOpen(true)}
+              className="rounded-full px-3.5 py-2 text-sm font-medium text-gold transition hover:bg-gold/10 hover:text-gold-soft"
+            >
+              Monte sua pizza
+            </button>
+          )}
           <NavLink
             href="#esfihas"
             onClick={() => selectMenuFilter('esfihas')}
@@ -74,6 +85,8 @@ export function Header() {
           </button>
         )}
       </div>
+
+      <PizzaBuilderModal isOpen={builderOpen} onClose={() => setBuilderOpen(false)} />
     </header>
   )
 }

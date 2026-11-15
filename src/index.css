@@ -3,8 +3,11 @@
 @theme {
   --font-sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
 
   --color-night: #120f0d;
+  --color-night-2: #1b1613;
+  --color-night-3: #241e19;
   --color-night-elevated: #1c1714;
   --color-cream: #f4e8d8;
   --color-cream-muted: #d9cbb8;
@@ -12,6 +15,11 @@
   --color-tomato-dark: #c43d28;
   --color-gold: #d9a441;
   --color-gold-soft: #e8c56a;
+  --color-line: rgba(244, 232, 216, 0.12);
+  
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
 }
 
 html {
